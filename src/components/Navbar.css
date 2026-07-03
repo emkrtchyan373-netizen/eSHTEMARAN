@@ -1,0 +1,77 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--white);
+  box-shadow: var(--shadow-nav);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  height: 75px;
+  gap: 40px;
+}
+
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.navbar__logo {
+  height: 38px;
+  width: auto;
+}
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex: 1;
+}
+
+.navbar__link {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--purple);
+  line-height: 1.2;
+}
+
+.navbar__link--active {
+  color: var(--purple);
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.navbar__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fafafa;
+  transition: opacity 0.2s;
+}
+
+.navbar__btn:hover {
+  opacity: 0.9;
+}
+
+.navbar__btn--signup {
+  background: var(--gradient-signup-btn);
+}
+
+.navbar__btn--signin {
+  background: var(--blue-bright);
+  box-shadow: var(--shadow-btn);
+}

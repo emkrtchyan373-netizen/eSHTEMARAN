@@ -1,0 +1,8 @@
+node_modules
+dist
+.DS_Store
+*.local
+figma-nodes.json
+figma-*.json
+parse-figma.js
+download-images.js
