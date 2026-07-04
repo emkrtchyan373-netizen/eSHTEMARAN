@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import MobileLayoutProvider from './components/MobileLayoutProvider'
 import LandingPage from './pages/LandingPage'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
@@ -13,6 +14,7 @@ import QuizPage from './pages/QuizPage'
 
 export default function App() {
   return (
+    <MobileLayoutProvider>
     <Routes>
       {/* 🏁 Հանրային էջեր */}
       <Route path="/" element={<LandingPage />} />
@@ -67,5 +69,6 @@ export default function App() {
         } 
       />
     </Routes>
+    </MobileLayoutProvider>
   )
 }

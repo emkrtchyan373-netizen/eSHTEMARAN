@@ -7,6 +7,8 @@ type ActiveItem = 'shtemaran-1' | 'shtemaran-2' | 'shtemaran-3' | 'progress' | '
 
 interface SidebarProps {
   active: ActiveItem
+  isOpen?: boolean
+  onNavigate?: () => void
 }
 
 const navItems: { id: ActiveItem; label: string; to: string; icon: ReactNode }[] = [
@@ -18,9 +20,9 @@ const navItems: { id: ActiveItem; label: string; to: string; icon: ReactNode }[]
   { id: 'settings', label: 'Կարգավորումներ', to: '/dashboard/settings', icon: <GearIcon /> },
 ]
 
-export default function Sidebar({ active }: SidebarProps) {
+export default function Sidebar({ active, isOpen = false, onNavigate }: SidebarProps) {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${isOpen ? ' sidebar--open' : ''}`}>
       <div className="sidebar__logo">
         <img src="/assets/logo.png" alt="eSHTEMARAN" />
       </div>
@@ -31,6 +33,7 @@ export default function Sidebar({ active }: SidebarProps) {
             key={item.id}
             to={item.to}
             className={`sidebar__link ${active === item.id ? 'sidebar__link--active' : ''}`}
+            onClick={onNavigate}
           >
             <span className="sidebar__icon">{item.icon}</span>
             <span className="sidebar__label">{item.label}</span>
