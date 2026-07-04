@@ -236,3 +236,42 @@
 .quiz-footer__btn:hover {
   opacity: 0.9;
 }
+/* 📱 ՄՈԲԻԼ ՀԵՌԱԽՈՍՆԵՐԻ ՀԱՄԱՐ (max-width: 600px) */
+@media (max-width: 600px) {
+  .quiz-header {
+    padding: 10px 14px !important;
+    gap: 8px !important;
+  }
+
+  /* Լոգոն մի քիչ փոքրացնում ենք */
+  .quiz-header__logo {
+    height: 26px !important;
+  }
+
+  /* Վերնագիրը (Section) փոքրացնում ենք */
+  .quiz-header__section {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+  }
+
+  /* Search բլոկից հանում ենք տեքստը, թողնում ենք մենակ իկոնան */
+  .quiz-header__search {
+    padding: 6px !important;
+    background: transparent !important;
+    border: none !important;
+  }
+  
+  .quiz-header__search span {
+    display: none !important; /* Թաքցնում է "Search" տեքստը */
+  }
+
+  /* Զանգակն ու ավատարը փոքրացնում ենք */
+  .quiz-header__bell {
+    padding: 6px !important;
+  }
+
+  .quiz-header__avatar-container {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}
