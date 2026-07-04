@@ -236,42 +236,80 @@
 .quiz-footer__btn:hover {
   opacity: 0.9;
 }
-/* 📱 ՄՈԲԻԼ ՀԵՌԱԽՈՍՆԵՐԻ ՀԱՄԱՐ (max-width: 600px) */
+
+/* 🖥️ Հիմնական սթայլեր համակարգչի համար (Desktop) */
+.quiz-layout-container, .dashboard-layout {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  background-color: #f9f6f0;
+}
+
+.sidebar, .quiz-sidebar, aside {
+  width: 260px;
+  min-width: 260px;
+  background-color: #fff;
+  border-right: 1px solid #e0dcd3;
+  padding: 24px;
+}
+
+.main-content, .quiz-content, main {
+  flex: 1;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+/* 📱 ՄՈԲԻԼ ՀԵՌԱԽՈՍՆԵՐԻ ՀԱՄԱՐ (Պլանշետներ և հեռախոսներ) */
+@media (max-width: 768px) {
+  .quiz-layout-container, .dashboard-layout {
+    flex-direction: column !important; /* Սարքում ենք իրար տակ */
+  }
+
+  /* Sidebar-ը հեռախոսի վրա */
+  .sidebar, .quiz-sidebar, aside {
+    width: 100% !important;
+    min-width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e0dcd3;
+    padding: 16px !important;
+    box-sizing: border-box;
+  }
+
+  /* Աջ կողմի հիմնական էջը՝ Welcome-ը և այլն */
+  .main-content, .quiz-content, main {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Տեքստերը, որոնք մեծ են ու ճզմվում են Dashboard-ում */
+  .welcome-title {
+    font-size: 24px !important;
+    line-height: 1.2 !important;
+    word-break: break-word;
+  }
+}
+
+/* 📱 ԱՌԱՆՁԻՆ ՄԵԴԻԱ ՀԱՐՑՈՒՄ ԳԼԽԱՎՈՐ ԷՋԻ ՏԵՔՍՏԵՐԻ ՀԱՄԱՐ (max-width: 600px) */
 @media (max-width: 600px) {
-  .quiz-header {
-    padding: 10px 14px !important;
-    gap: 8px !important;
+  /* Գլխավոր էջի տեքստը, որ էլ դուրս չգա էկրանից */
+  .landing-title, 
+  h1 {
+    font-size: 26px !important;
+    line-height: 1.3 !important;
+    padding: 0 12px !important;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    text-align: center;
   }
 
-  /* Լոգոն մի քիչ փոքրացնում ենք */
-  .quiz-header__logo {
-    height: 26px !important;
-  }
-
-  /* Վերնագիրը (Section) փոքրացնում ենք */
-  .quiz-header__section {
-    font-size: 16px !important;
-    font-weight: 600 !important;
-  }
-
-  /* Search բլոկից հանում ենք տեքստը, թողնում ենք մենակ իկոնան */
-  .quiz-header__search {
-    padding: 6px !important;
-    background: transparent !important;
-    border: none !important;
-  }
-  
-  .quiz-header__search span {
-    display: none !important; /* Թաքցնում է "Search" տեքստը */
-  }
-
-  /* Զանգակն ու ավատարը փոքրացնում ենք */
-  .quiz-header__bell {
-    padding: 6px !important;
-  }
-
-  .quiz-header__avatar-container {
-    width: 32px !important;
-    height: 32px !important;
+  /* Նկարագրության տեքստը հեռախոսի վրա */
+  .landing-description, 
+  p {
+    font-size: 15px !important;
+    padding: 0 16px !important;
+    line-height: 1.5 !important;
+    text-align: center;
   }
 }
