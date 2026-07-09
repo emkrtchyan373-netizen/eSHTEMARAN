@@ -243,13 +243,16 @@
 /* ==========================================
    MOBILE VERSION (Բջջային տարբերակի ոճեր)
    ========================================== */
+/* ==========================================
+   MOBILE VERSION (Միայն դասավորությունը)
+   ========================================== */
 @media (max-width: 768px) {
   /* Թույլ ենք տալիս էջին փոքրանալ հեռախոսի էկրանի չափով */
   .quiz-page {
     min-width: 100% !important;
   }
 
-  /* Ձախ (sidebar) և Աջ (main) մասերը դասավորում ենք իրար տակ */
+  /* Sidebar-ն ու հարցերը դասավորում ենք իրար տակ */
   .quiz-page__body {
     flex-direction: column !important;
     min-height: auto !important;
@@ -269,50 +272,18 @@
   }
 
   /* --- ՍՊԻՏԱԿ ՔԱՐՏԸ --- */
+  /* Սա ուղղահայաց կենտրոնացնում է QuizView-ի ամբողջ բլոկը */
   .quiz-page__content > div:first-child { 
-    background: #ffffff !important;
+    background: #ffffff !important; /* Սպիտակ ֆոն, ինչպես 1-ին նկարում */
     border-radius: 24px !important;
     padding: 24px 20px !important;
     width: 100% !important;
     max-width: 450px !important;
-    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.06) !important;
     box-sizing: border-box !important;
   }
 
-  /* Հարցի տեքստը */
-  .quiz-page__content h2, 
-  .quiz-page__content p {
-    color: #000000 !important;
-    font-size: 18px !important;
-    font-weight: 600 !important;
-    line-height: 1.5 !important;
-    margin-bottom: 20px !important;
-    text-align: left !important;
-  }
-
-  /* ՊԱՏԱՍԽԱՆՆԵՐԻ ԿՈՃԱԿՆԵՐԸ (Միայն դասավորությունը) */
-  .quiz-page__content button { 
-    border-radius: 14px !important;
-    padding: 14px 20px !important;
-    font-size: 16px !important;
-    text-align: left !important;
-    width: 100% !important;
-    display: block !important;
-    margin-bottom: 12px !important;
-    box-sizing: border-box !important;
-    font-weight: 400 !important;
-    text-transform: none !important;
-  }
-
-  /* Կիրառում ենք բաց մոխրագույն ֆոն ՄԻԱՅՆ այն կոճակների համար, 
-     որոնք դեռ չեն սեղմվել (չունեն հատուկ կանաչ/կարմիր class-ներ) */
-  .quiz-page__content button:not([class*="correct"]):not([class*="wrong"]):not([class*="success"]):not([class*="danger"]) {
-    background-color: #f3f6f9 !important;
-    border: 1px solid #e2e8f0 !important;
-    color: #1e293b !important;
-  }
-
-  /* --- Լրացուցիչ հարմարեցումներ --- */
+  /* --- Լրացուցիչ հարմարեցումներ layout-ի համար --- */
   .quiz-sidebar {
     width: 100% !important;
     padding: 20px 12px !important;
