@@ -237,3 +237,98 @@
   opacity: 0.9;
 }
 
+/* ==========================================
+   MOBILE VERSION (Բջջային տարբերակի ոճեր)
+   ========================================== */
+@media (max-width: 768px) {
+  /* Թույլ ենք տալիս էջին փոքրանալ հեռախոսի էկրանի չափով */
+  .quiz-page {
+    min-width: 100% !important;
+  }
+
+  /* Ձախ (sidebar) և Աջ (main) մասերը դասավորում ենք իրար տակ */
+  .quiz-page__body {
+    flex-direction: column !important;
+    min-height: auto !important;
+  }
+
+  /* Հեռացնում ենք desktop-ի ձախ գիծը */
+  .quiz-page__main {
+    border-left: none !important;
+    width: 100% !important;
+  }
+
+  /* Հարցերի հիմնական կոնտեյները */
+  .quiz-page__content {
+    padding: 16px !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* --- ՍՊԻՏԱԿ ՔԱՐՏԸ (Ինչպես 1-ին նկարում) --- */
+  /* Գտեք ձեր հարցերի բլոկի իրական HTML թեգը/class-ը և փոխարինեք սրանով, 
+     կամ եթե այն գտնվում է անմիջապես content-ի մեջ, կիրառեք սա */
+  .quiz-page__content > div:first-child { 
+    background: #ffffff !important;
+    border-radius: 24px !important;
+    padding: 24px 20px !important;
+    width: 100% !important;
+    max-width: 450px !important; /* Որպեսզի շատ չլայնանա */
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1) !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Հարցի տեքստը սարքում ենք սև */
+  .quiz-page__content h2, 
+  .quiz-page__content p,
+  .quiz-page__content .question-text { /* Ավելացրեք ձեր հարցի տեքստի class-ը */
+    color: #000000 !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 1.5 !important;
+    margin-bottom: 20px !important;
+    text-align: left !important;
+  }
+
+  /* Պատասխանների կոճակները (Buttons) */
+  .quiz-page__content button { 
+    background-color: #f3f6f9 !important; /* 1-ին նկարի բաց ֆոնը */
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    color: #1e293b !important;
+    padding: 14px 20px !important;
+    font-size: 16px !important;
+    text-align: left !important;
+    width: 100% !important;
+    display: block !important;
+    margin-bottom: 12px !important;
+    box-sizing: border-box !important;
+    font-weight: 400 !important;
+    text-transform: none !important; /* Որ հնարավոր մեծատառերը չփոխվեն */
+  }
+
+  /* Երբ սեղմում ենք պատասխանի վրա */
+  .quiz-page__content button:active {
+    background-color: #e2e8f0 !important;
+  }
+
+  /* --- Լրացուցիչ հարմարեցումներ մնացած էլեմենտների համար --- */
+  .quiz-sidebar {
+    width: 100% !important;
+    padding: 20px 12px !important;
+  }
+
+  .quiz-header {
+    padding: 0 16px !important;
+  }
+
+  .quiz-header__section {
+    margin-left: 20px !important;
+    font-size: 18px !important;
+  }
+
+  /* Թաքցնում ենք բջջայինում ավելորդ search-ը, եթե տեղ չկա */
+  .quiz-header__search {
+    display: none !important;
+  }
+}
