@@ -12,6 +12,9 @@ import ProtectedRoute from './components/ProtectedRoute'
 // Նոր դիզայնով QuizPage էջը
 import QuizPage from './pages/QuizPage'
 
+// 🎯 Ներմուծում ենք գեներացված պատահական հարցերով նոր էջը
+import GeneratedQuizRun from './pages/GeneratedQuizRun'
+
 export default function App() {
   return (
     <MobileLayoutProvider>
@@ -65,6 +68,16 @@ export default function App() {
         element={
           <ProtectedRoute>
             <TestsPage />
+          </ProtectedRoute>
+        } 
+      />
+
+      {/* 🎯 ՆՈՐ ԵՐԹՈՒՂԻ: Սա կբացի մոդալից գեներացված թեստը լուծելու էջը */}
+      <Route 
+        path="/dashboard/tests/run-generated" 
+        element={
+          <ProtectedRoute>
+            <GeneratedQuizRun />
           </ProtectedRoute>
         } 
       />

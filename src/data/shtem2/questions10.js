@@ -1,4 +1,4 @@
-const SECTION_10_DATA = {
+export const SHTEM2_SECTION_10_DATA = {
   title: "Section 10 – Choose the sentences with an odd word",
   questions: [
     // 1

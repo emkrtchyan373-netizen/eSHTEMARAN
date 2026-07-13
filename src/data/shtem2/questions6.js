@@ -1,4 +1,4 @@
-const SECTION_6_DATA = {
+export const SHTEM2_SECTION_6_DATA = {
   questions: [
     // 1
     { q: "1. Choose the correctly transformed sentences.", opts: [

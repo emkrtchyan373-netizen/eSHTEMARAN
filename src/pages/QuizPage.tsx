@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { supabase } from '../supabaseClient'
 import QuizHeader from '../components/QuizHeader'
 import QuizSidebar from '../components/QuizSidebar'
 import QuizProgress from '../components/QuizProgress'
@@ -12,12 +13,6 @@ import MatchingView from '../components/questions/MatchingView'
 import { quizRegistry } from '../data/quizRegistry'
 import './QuizPage.css'
 
-interface SectionState {
-  currentIndex: number
-  wrongs: number[]
-  time: number
-}
-
 export default function QuizPage() {
   const { shtemId = '3', sectionNum = '2' } = useParams<{ shtemId: string; sectionNum: string }>()
   const navigate = useNavigate()
@@ -25,180 +20,240 @@ export default function QuizPage() {
   const registryKey = `${shtemId}_${sectionNum}`
   const quizData = quizRegistry[registryKey] as any
 
-  const [quizStates, setQuizStates] = useState<Record<string, SectionState>>({})
-  
-  const currentQuestionIndex = quizStates[registryKey]?.currentIndex || 0
-  const wrongAnswers = quizStates[registryKey]?.wrongs || []
-  const timePassed = quizStates[registryKey]?.time || 0
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [wrongAnswers, setWrongAnswers] = useState<number[]>([])
+  const [answeredQuestions, setAnsweredQuestions] = useState<number[]>([])
+  const [timePassed, setTimePassed] = useState(0)
+  const [isTimerActive, setIsTimerActive] = useState(true)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
 
-  const [isTimerActive, setIsTimerActive] = useState(false) 
+  // Օգտատիրոջ տվյալների բեռնում Supabase-ից
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        setUserId(user.id)
+        setUserEmail(user.email || null)
+      }
+    }
+    fetchUser()
+  }, [])
 
+  // Սեկցիան փոխելիս զրոյացնել ամեն ինչ
+  useEffect(() => {
+    setCurrentIndex(0)
+    setWrongAnswers([])
+    setAnsweredQuestions([])
+    setTimePassed(0)
+    setIsTimerActive(true)
+  }, [registryKey])
+
+  // Ժամանակացույց
   useEffect(() => {
     let timer: any
     if (isTimerActive) {
       timer = setInterval(() => {
-        setQuizStates((prev) => {
-          const currentState = prev[registryKey] || { currentIndex: 0, wrongs: [], time: 0 }
-          return {
-            ...prev,
-            [registryKey]: {
-              ...currentState,
-              time: currentState.time + 1
-            }
-          }
-        })
+        setTimePassed((prev) => prev + 1)
       }, 1000)
-    } else {
-      clearInterval(timer)
     }
     return () => clearInterval(timer)
-  }, [isTimerActive, registryKey])
+  }, [isTimerActive])
+
+  // Ժամանակի ֆորմատավորում պահպանելու համար
+  const formatTimeSpent = (seconds: number): string => {
+    if (seconds < 60) return `${seconds} վայրկյան`
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return secs > 0 ? `${mins} րոպե ${secs} վայրկյան` : `${mins} րոպե`
+  }
+
+  // 💾 SAVE ԿՈՃԱԿԻ ՏՐԱՄԱԲԱՆՈՒԹՅՈՒՆԸ ԲՈԼՈՐ ՍԵԿՑԻԱՆԵՐԻ ՀԱՄԱՐ
+  const handleSaveProgress = async () => {
+    try {
+      let currentUserId = userId
+      let currentEmail = userEmail
+
+      if (!currentUserId || !currentEmail) {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+          alert('Մուտք գործեք՝ առաջադիմությունը պահպանելու համար։')
+          return
+        }
+        currentUserId = user.id
+        currentEmail = user.email || ''
+        setUserId(user.id)
+        setUserEmail(currentEmail)
+      }
+
+      const section_id = `section_${shtemId}_${sectionNum}`
+      const last_question_number = currentIndex + 1
+      const wrong_questions = wrongAnswers
+
+      // 1. Պահպանում ենք ընթացիկ պրոգրեսը
+      const { error: progressError } = await supabase.from('user_progress').upsert(
+        {
+          user_id: currentUserId,
+          section_id,
+          last_question_number,
+          wrong_questions
+        },
+        { onConflict: 'user_id,section_id' }
+      )
+
+      if (progressError) throw progressError
+
+      // 2. Ուղարկում ենք արդյունքները տվյալների բազա
+      const { error: resultError } = await supabase.from('quiz_results').insert({
+        user_id: currentUserId,
+        student_email: currentEmail.toLowerCase(),
+        section_name: `Շտեմարան ${shtemId} - Բաժին ${sectionNum}`,
+        questions_count: totalQuestions,
+        answered_count: answeredQuestions.length,
+        time_spent: formatTimeSpent(timePassed),
+        wrongs_count: wrongAnswers.length,
+        wrong_questions_ids: wrongAnswers
+      })
+
+      if (resultError) throw resultError
+
+      alert('Առաջադիմությունը և արդյունքները հաջողությամբ պահպանվեցին։')
+    } catch (err: any) {
+      console.error('Error saving progress:', err)
+      alert('Պահպանման սխալ: ' + err.message)
+    }
+  }
 
   if (!quizData || !quizData.questions || quizData.questions.length === 0) {
     return (
       <div className="quiz-page" style={{ color: 'red', padding: '20px', fontWeight: 'bold' }}>
-        Տվյալները չեն գտնվել {registryKey} բանալիով:
+        Տվյալները բացակայում են այս բաժնի համար։
       </div>
     )
   }
 
   const totalQuestions = quizData.questions.length
-  const currentQuestion = quizData.questions[currentQuestionIndex]
+  const currentQuestion = quizData.questions[currentIndex]
+  const numericSection = parseInt(sectionNum, 10)
 
   const handleAnswerSelect = (isCorrect: boolean) => {
-    const questionId = currentQuestion?.id || (currentQuestionIndex + 1)
-    if (!isCorrect) {
-      if (!wrongAnswers.includes(questionId)) {
-        const updatedWrongs = [...wrongAnswers, questionId].sort((a, b) => a - b)
-        setQuizStates((prev) => ({
-          ...prev,
-          [registryKey]: {
-            ...(prev[registryKey] || { currentIndex: 0, wrongs: [], time: 0 }),
-            wrongs: updatedWrongs
-          }
-        }))
-      }
+    const questionId = currentQuestion?.id || (currentIndex + 1)
+    
+    if (!answeredQuestions.includes(questionId)) {
+      setAnsweredQuestions((prev) => [...prev, questionId])
+    }
+
+    if (!isCorrect && !wrongAnswers.includes(questionId)) {
+      setWrongAnswers((prev) => [...prev, questionId].sort((a, b) => a - b))
     }
   }
 
   const handleNext = () => {
-    if (currentQuestionIndex < totalQuestions - 1) {
-      setQuizStates((prev) => ({
-        ...prev,
-        [registryKey]: {
-          ...(prev[registryKey] || { wrongs: [], time: 0 }),
-          currentIndex: currentQuestionIndex + 1
-        }
-      }))
+    if (currentIndex < totalQuestions - 1) {
+      setCurrentIndex((prev) => prev + 1)
     }
   }
 
   const handleBack = () => {
-    if (currentQuestionIndex > 0) {
-      setQuizStates((prev) => ({
-        ...prev,
-        [registryKey]: {
-          ...(prev[registryKey] || { wrongs: [], time: 0 }),
-          currentIndex: currentQuestionIndex - 1
-        }
-      }))
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - 1)
     }
   }
 
-  const handleSelectWrongQuestion = (qId: number) => {
-    setQuizStates((prev) => ({
-      ...prev,
-      [registryKey]: {
-        ...(prev[registryKey] || { wrongs: [], time: 0 }),
-        currentIndex: qId - 1
-      }
-    }))
+  const handleSelectWrongQuestion = (qId: any) => {
+    const targetIdx = quizData.questions.findIndex((q: any) => q.id === qId)
+    if (targetIdx !== -1) {
+      setCurrentIndex(targetIdx)
+    }
   }
 
-  // 🎚️ Այս ֆունկցիան թույլ կտա գծով փոխել հարցի դիրքը
   const handleSliderChange = (newIndex: number) => {
-    setQuizStates((prev) => ({
-      ...prev,
-      [registryKey]: {
-        ...(prev[registryKey] || { wrongs: [], time: 0 }),
-        currentIndex: newIndex
-      }
-    }))
+    setCurrentIndex(newIndex)
   }
 
-  const numericSection = parseInt(sectionNum, 10)
-  const isLastQuestion = currentQuestionIndex === totalQuestions - 1
+  const isLastQuestion = currentIndex === totalQuestions - 1
   
   const renderQuestionTemplate = () => {
     if (!currentQuestion) return <p>Հարցը բեռնված չէ:</p>
+    const finalAnswersObj = quizData.answers?.[currentIndex] || currentQuestion.answer
 
-    if (numericSection === 2 || numericSection === 4) {
-      const currentAnswerObj = quizData.answers ? quizData.answers[currentQuestionIndex] : undefined
-      return (
-        <MultiBlankView 
-          data={currentQuestion} 
-          correctAnswersObj={currentAnswerObj}
-          onAnswer={handleAnswerSelect as any}
-          onNext={handleNext}
-          isLast={isLastQuestion}
-        />
-      )
+    switch (numericSection) {
+      case 2:
+      case 4:
+        return (
+          <MultiBlankView 
+            key={`mb-${currentIndex}`} 
+            data={currentQuestion} 
+            correctAnswersObj={finalAnswersObj}
+            onAnswer={handleAnswerSelect}
+            onNext={handleNext}
+            isLast={isLastQuestion}
+          />
+        )
+      case 1:
+      case 3:
+      case 5:
+        let correctAnsIndex = 0
+        if (typeof finalAnswersObj === 'number') {
+          correctAnsIndex = finalAnswersObj
+        } else if (typeof finalAnswersObj === 'string') {
+          correctAnsIndex = ['a', 'b', 'c', 'd', 'e'].indexOf(finalAnswersObj.toLowerCase())
+        }
+        return (
+          <SingleChoiceView 
+            key={`sc-${currentIndex}`}
+            data={currentQuestion} 
+            correctAnswerIndex={correctAnsIndex === -1 ? 0 : correctAnsIndex} 
+            onAnswer={handleAnswerSelect}
+            onNext={handleNext}
+            isLast={isLastQuestion}
+          />
+        )
+      case 6:
+      case 8:
+      case 10:
+      case 11:
+      case 14:
+      case 15:
+        return (
+          <TransformView 
+            key={`tf-${currentIndex}`}
+            data={currentQuestion} 
+            correctAnswers={Array.isArray(finalAnswersObj) ? finalAnswersObj : []} 
+            onAnswer={handleAnswerSelect}
+            onNext={handleNext}
+            isLast={isLastQuestion}
+          />
+        )
+      case 7:
+      case 9:
+        return (
+          <WordBankView 
+            key={`wb-${currentIndex}`}
+            data={currentQuestion} 
+            onAnswer={handleAnswerSelect}
+            onNext={handleNext}
+            isLast={isLastQuestion}
+          />
+        )
+      case 12:
+      case 13:
+        return (
+          <MatchingView 
+            key={`mt-${currentIndex}`}
+            data={currentQuestion} 
+            correctAnswersObj={finalAnswersObj}
+            onAnswer={handleAnswerSelect}
+            onNext={handleNext}
+            isLast={isLastQuestion}
+          />
+        )
+      default:
+        return <p>Անհայտ բաժին</p>
     }
-
-    if (numericSection === 3 || numericSection === 5) {
-      const correctAnsIndex = quizData.answers && typeof quizData.answers[currentQuestionIndex] === 'number'
-        ? quizData.answers[currentQuestionIndex] 
-        : 0
-
-      return (
-        <SingleChoiceView 
-          data={currentQuestion} 
-          correctAnswerIndex={correctAnsIndex} 
-          onAnswer={handleAnswerSelect as any}
-          onNext={handleNext}
-          isLast={isLastQuestion}
-        />
-      )
-    }
-
-    if (numericSection === 6 || numericSection === 8 || numericSection === 10 || numericSection === 11) {
-      const currentAnswersArray = quizData.answers ? quizData.answers[currentQuestionIndex] : []
-      return (
-        <TransformView 
-          data={currentQuestion} 
-          correctAnswers={currentAnswersArray} 
-          onAnswer={handleAnswerSelect as any}
-          onNext={handleNext}
-          isLast={isLastQuestion}
-        />
-      )
-    }
-
-    if (numericSection === 7 || numericSection === 9) {
-      return (
-        <WordBankView 
-          data={currentQuestion} 
-          onAnswer={handleAnswerSelect as any}
-          onNext={handleNext}
-          isLast={isLastQuestion}
-        />
-      )
-    }
-
-    if (numericSection === 12 || numericSection === 13) {
-      return (
-        <MatchingView 
-          data={currentQuestion} 
-          onAnswer={handleAnswerSelect as any}
-          onNext={handleNext}
-          isLast={isLastQuestion}
-        />
-      )
-    }
-    return <p>Ընտրեք համապատասխան սեկցիան:</p>
   }
   
-  const sectionsList = Array.from({ length: 12 }, (_, i) => String(i + 2))
+  const sectionsList = Array.from({ length: 14 }, (_, i) => String(i + 2))
 
   return (
     <div className="quiz-page">
@@ -214,9 +269,8 @@ export default function QuizPage() {
         />
 
         <main className="quiz-page__main">
-          {/* 🎚️ Փոխանցում ենք սլայդերի ֆունկցիան */}
           <QuizProgress 
-            current={currentQuestionIndex + 1} 
+            current={currentIndex + 1} 
             total={totalQuestions} 
             onSliderChange={handleSliderChange}
           />
@@ -225,38 +279,46 @@ export default function QuizPage() {
             {renderQuestionTemplate()}
           </div>
           
-          <QuizFooter 
-            onNext={handleNext} 
-            onBack={handleBack}
-            isFirst={currentQuestionIndex === 0}
-            isLast={isLastQuestion}
-          />
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <QuizFooter 
+              onNext={handleNext} 
+              onBack={handleBack}
+              isFirst={currentIndex === 0}
+              isLast={isLastQuestion}
+            />
+            
+            {/* 💾 ԿԱՆԱՉ SAVE ԿՈՃԱԿԸ */}
+            <button
+              onClick={handleSaveProgress}
+              style={{
+                padding: '10px 24px',
+                backgroundColor: '#34a853',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                fontSize: '14px',
+                height: '42px',
+                marginTop: '12px'
+              }}
+            >
+              Save
+            </button>
+          </div>
         </main>
       </div>
 
       <nav className="quiz-page__nav" aria-label="Sections navigation" style={{
-        display: 'flex',
-        gap: '8px',
-        overflowX: 'auto',
-        padding: '12px 20px',
-        backgroundColor: '#fff',
-        borderTop: '1px solid #e0dcd3'
+        display: 'flex', gap: '8px', overflowX: 'auto', padding: '12px 20px', backgroundColor: '#fff', borderTop: '1px solid #e0dcd3'
       }}>
         {sectionsList.map((sec) => (
           <button
             key={sec}
-            onClick={() => {
-              setIsTimerActive(false)
-              navigate(`/quiz/${shtemId}/${sec}`)
-            }}
+            onClick={() => navigate(`/quiz/${shtemId}/${sec}`)}
             className={sectionNum === sec ? 'quiz-page__nav-link quiz-page__nav-link--active' : 'quiz-page__nav-link'}
             style={{
-              padding: '8px 16px',
-              whiteSpace: 'nowrap',
-              borderRadius: '6px',
-              fontSize: '13px',
-              fontWeight: sectionNum === sec ? '600' : '400',
-              cursor: 'pointer'
+              padding: '8px 16px', whiteSpace: 'nowrap', borderRadius: '6px', fontSize: '13px', cursor: 'pointer'
             }}
           >
             Section {sec}

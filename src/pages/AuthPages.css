@@ -167,3 +167,59 @@
     color: var(--text-secondary);
   }
 }
+.role-selection {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.role-label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.role-options {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.role-box {
+  cursor: pointer;
+  flex: 1;
+  max-width: 150px;
+}
+
+.role-box input[type="radio"] {
+  display: none;
+}
+
+.role-card {
+  background: #f9f9f9;
+  border: 2px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.role-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.role-text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.role-box input[type="radio"]:checked + .role-card {
+  border-color: #007bff;
+  background-color: #e7f3ff;
+  color: #007bff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}

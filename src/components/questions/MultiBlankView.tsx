@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 
 interface OptionObj { a: string; b: string; c: string; d: string }
-interface SubQuestion { number: number; options: OptionObj }
+interface SubQuestion { number: number; options: OptionObj | string[] } // 👈 Թույլ ենք տալիս նաև string[]
 interface MultiBlankQuestion { id: number; passage: string; subQuestions: SubQuestion[] }
 
 interface MultiBlankViewProps {
   data: MultiBlankQuestion
-  onAnswer?: (isCorrect: boolean) => void // Ուղղված տիպը
+  onAnswer?: (isCorrect: boolean) => void
   correctAnswersObj?: { q1: string; q2: string; q3: string; q4: string; q5?: string }
   onNext?: () => void
   isLast?: boolean
@@ -35,7 +35,7 @@ export default function MultiBlankView({ data, onAnswer, correctAnswersObj, onNe
   return (
     <div className="multi-blank-view" style={{ padding: '20px', width: '100%' }}>
       <p style={{ fontSize: '17px', lineHeight: '1.8', marginBottom: '30px', color: '#333', textAlign: 'justify' }}>
-        {data.passage}
+        {data.passage || (data as any).q}
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '30px' }}>
@@ -48,8 +48,16 @@ export default function MultiBlankView({ data, onAnswer, correctAnswersObj, onNe
             <div key={blankNum} style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
               <span style={{ fontSize: '16px', fontWeight: 'bold', width: '25px' }}>{blankNum}</span>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', flex: 1 }}>
-                {(['a', 'b', 'c', 'd'] as const).map((letter) => {
-                  const optionText = subQ.options[letter]
+                {(['a', 'b', 'c', 'd'] as const).map((letter, index) => {
+                  
+                  // 🛠️ ԱՎԵԼԱՑՎԱԾ Է ՍՏՈՒԳՈՒՄ. Եթե options-ը զանգված է, վերցնում ենք ըստ ինդեքսի (0, 1, 2, 3), հակառակ դեպքում՝ ըստ տառի
+                  let optionText = '';
+                  if (Array.isArray(subQ.options)) {
+                    optionText = subQ.options[index] || '';
+                  } else if (subQ.options && typeof subQ.options === 'object') {
+                    optionText = (subQ.options as any)[letter] || '';
+                  }
+
                   const isCurrentSelected = selectedLetter === letter
 
                   let btnStyle: React.CSSProperties = {
@@ -60,7 +68,8 @@ export default function MultiBlankView({ data, onAnswer, correctAnswersObj, onNe
                     cursor: 'pointer',
                     fontSize: '15px',
                     minWidth: '160px',
-                    textAlign: 'left'
+                    textAlign: 'left',
+                    transition: 'all 0.2s ease'
                   }
 
                   if (selectedLetter) {
@@ -85,7 +94,7 @@ export default function MultiBlankView({ data, onAnswer, correctAnswersObj, onNe
                       disabled={!!selectedLetter}
                       style={btnStyle}
                     >
-                      <strong style={{ marginRight: '6px' }}>{letter}:</strong> {optionText}
+                      <strong style={{ marginRight: '6px' }}>{letter.toUpperCase()}:</strong> {optionText}
                     </button>
                   )
                 })}

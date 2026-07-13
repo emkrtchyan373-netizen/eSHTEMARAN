@@ -8,12 +8,13 @@ interface MatchingQuestionData {
 
 interface MatchingViewProps {
   data: MatchingQuestionData
+  correctAnswersObj?: any
   onAnswer?: (isCorrect: boolean) => void
   onNext?: () => void
   isLast?: boolean
 }
 
-export default function MatchingView({ data, onAnswer, onNext, isLast }: MatchingViewProps) {
+export default function MatchingView({ data, correctAnswersObj, onAnswer, onNext, isLast }: MatchingViewProps) {
   // Պահում ենք, թե որ ընդհանուր տառին (A, B, C, D) որ բացատրության ինդեքսն է ընտրված
   const [selections, setSelections] = useState<Record<string, number>>({
     A: -1,
@@ -42,12 +43,8 @@ export default function MatchingView({ data, onAnswer, onNext, isLast }: Matchin
   }
 
   const handleCheck = () => {
-    // 🎯 ՃԻՇՏ ՊԱՏԱՍԽԱՆՆԵՐԸ (Hardcoded հենց քո ֆայլի օրինակով)
-    // "A": 3 (Introduction -> the first part of a book...)
-    // "B": 1 (Expansion -> the action of becoming larger...)
-    // "C": 4 (Conclusion -> the end, finish...)
-    // "D": 0 (Contribution -> a gift or payment...)
-    const correctAnswers: Record<string, number> = { A: 3, B: 1, C: 4, D: 0 }
+    // 🎯 ՃԻՇՏ ՊԱՏԱՍԽԱՆՆԵՐԸ
+    const correctAnswers: Record<string, number> = correctAnswersObj || { A: 3, B: 1, C: 4, D: 0 }
 
     let allCorrect = true
     letterKeys.forEach((letter) => {
@@ -67,7 +64,7 @@ export default function MatchingView({ data, onAnswer, onNext, isLast }: Matchin
   const isAllSelected = letterKeys.every((letter) => selections[letter] !== -1)
 
   // Ճիշտ պատասխանների տեքստային քարտեզ՝ հուշման համար
-  const correctAnswersMap: Record<string, number> = { A: 3, B: 1, C: 4, D: 0 }
+  const correctAnswersMap: Record<string, number> = correctAnswersObj || { A: 3, B: 1, C: 4, D: 0 }
 
   return (
     <div className="matching-view" style={{ padding: '20px', width: '100%', textAlign: 'left' }}>

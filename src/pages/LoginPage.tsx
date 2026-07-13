@@ -5,10 +5,10 @@ import { supabase } from '../supabaseClient'
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [role, setRole] = useState<'student' | 'teacher'>('student') // 🎯 Դերի state
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  // Քո Supabase լոգինի ֆունկցիան՝ անփոփոխ
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -38,8 +38,8 @@ export default function LoginPage() {
   return (
     <div style={{
       display: 'flex',
-      justifyContent: 'center', // 🎯 Բերում է ֆորման հորիզոնական մեջտեղ
-      alignItems: 'center',     // 🎯 Բերում է ֆորման ուղղահայաց մեջտեղ
+      justifyContent: 'center',
+      alignItems: 'center',
       minHeight: '100vh',
       width: '100vw',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -49,21 +49,77 @@ export default function LoginPage() {
       boxSizing: 'border-box'
     }}>
       
-      {/* ✍️ ՖՈՐՄԱՅԻ ԲԼՈԿԸ՝ ՀԻՄԱ ԷԿՐԱՆԻ ՃԻՇՏ ԿԵՆՏՐՈՆՈՒՄ */}
       <div style={{ 
         width: '100%', 
         maxWidth: '440px', 
         textAlign: 'center',
-        backgroundColor: '#fff', // Սպիտակ սիրուն ֆոն ֆորմայի համար
+        backgroundColor: '#fff',
         padding: '40px',
         borderRadius: '16px',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.04)' // Թեթև ստվեր
+        boxShadow: '0 4px 24px rgba(0,0,0,0.04)'
       }}>
         
         <h1 style={{ fontSize: '36px', fontWeight: '500', color: '#191919', marginBottom: '8px', letterSpacing: '-0.5px' }}>Sign-in</h1>
         <p style={{ color: '#666', marginBottom: '30px', fontSize: '16px' }}>Log in to your Shtemaran account</p>
 
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          
+          {/* 🎯 Role Selection Block */}
+          <div style={{ textAlign: 'left', marginBottom: '10px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#444', marginBottom: '8px' }}>
+              Ընտրեք ձեր դերը / Select your role
+            </label>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              {/* Student Card */}
+              <label style={{
+                flex: 1,
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: '12px',
+                borderRadius: '12px',
+                border: role === 'student' ? '2px solid #191919' : '1px solid #e0dcd3',
+                backgroundColor: role === 'student' ? '#fbfbfa' : '#fff',
+                transition: 'all 0.2s'
+              }}>
+                <input 
+                  type="radio" 
+                  name="loginRole" 
+                  checked={role === 'student'} 
+                  onChange={() => setRole('student')} 
+                  style={{ display: 'none' }} 
+                />
+                <span style={{ fontSize: '20px', marginBottom: '4px' }}>🎓</span>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: '#191919' }}>Student / Աշակերտ</span>
+              </label>
+
+              {/* Teacher Card */}
+              <label style={{
+                flex: 1,
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: '12px',
+                borderRadius: '12px',
+                border: role === 'teacher' ? '2px solid #191919' : '1px solid #e0dcd3',
+                backgroundColor: role === 'teacher' ? '#fbfbfa' : '#fff',
+                transition: 'all 0.2s'
+              }}>
+                <input 
+                  type="radio" 
+                  name="loginRole" 
+                  checked={role === 'teacher'} 
+                  onChange={() => setRole('teacher')} 
+                  style={{ display: 'none' }} 
+                />
+                <span style={{ fontSize: '20px', marginBottom: '4px' }}>👨‍🏫</span>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: '#191919' }}>Teacher / Ուսուցիչ</span>
+              </label>
+            </div>
+          </div>
+
           <div style={{ textAlign: 'left' }}>
             <label htmlFor="email" style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#444', marginBottom: '6px' }}>Email</label>
             <input 

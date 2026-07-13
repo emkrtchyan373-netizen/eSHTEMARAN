@@ -1,4 +1,4 @@
-const SECTION_3_DATA = {
+export const SHTEM2_SECTION_3_DATA = {
   questions: [
   // 1
   {q:`"You know, Lucy, I made a terrible mistake yesterday."\n"Don't worry, _________ noticed what you did."`,opts:["somebody","nobody","anybody","anyone"]},

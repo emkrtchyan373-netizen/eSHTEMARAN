@@ -1,4 +1,4 @@
-const SECTION_12_DATA = {
+export const SHTEM2_SECTION_12_DATA = {
 questions: [
   {
     id: 1,

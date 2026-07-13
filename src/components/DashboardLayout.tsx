@@ -1,4 +1,5 @@
 import { useState, useEffect, type ReactNode } from 'react'
+import { supabase } from '../supabaseClient' // 🔥 Ավելացնում ենք supabase-ը ստուգման համար
 import Sidebar from './Sidebar'
 import DashboardHeader from './DashboardHeader'
 import { useIsMobile } from '../hooks/useIsMobile'
@@ -14,6 +15,23 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ active, children }: DashboardLayoutProps) {
   const isMobile = useIsMobile()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isTeacher, setIsTeacher] = useState(false) // 🔥 State՝ օգտատիրոջ դերը պահելու համար
+
+  useEffect(() => {
+    const checkUserRole = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          // Ստուգում ենք՝ արդյոք user-ի մետատվյալներում դերը նշված է որպես teacher
+          const role = user.user_metadata?.role
+          setIsTeacher(role === 'teacher')
+        }
+      } catch (error) {
+        console.error('Error checking user role:', error)
+      }
+    }
+    checkUserRole()
+  }, [])
 
   useEffect(() => {
     if (!isMobile) {
@@ -39,9 +57,11 @@ export default function DashboardLayout({ active, children }: DashboardLayoutPro
         />
       )}
 
+      {/* 🔥 Sidebar-ին փոխանցում ենք isTeacher արժեքը */}
       <Sidebar
         active={active}
         isOpen={isMobile && sidebarOpen}
+        isTeacher={isTeacher} 
         onNavigate={isMobile ? closeSidebar : undefined}
       />
 

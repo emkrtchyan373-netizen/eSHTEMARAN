@@ -1,4 +1,4 @@
-const SECTION_5_DATA = {
+export const SHTEM2_SECTION_5_DATA = {
     questions: [
         { q: "Ecologists try to find out how the Earth's environments can be preserved _____ living things will continue to survive on the planet.", opts: ["now that","in order to","in case","so that"] },
         { q: "_____ children get older, their questions get harder to answer.", opts: ["As","Because of","In order that","However"] },
