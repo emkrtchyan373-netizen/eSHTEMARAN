@@ -11,12 +11,35 @@ export default function QuizViewPage() {
   useEffect(() => {
     if (!shtemId || !sectionNum) return
 
-    // Կառուցում ենք բանալին (օրինակ՝ '3_2' կամ '3_3')
     const registryKey = `${shtemId}_${sectionNum}`
-    const data = quizRegistry[registryKey]
+    const rawData = quizRegistry[registryKey]
 
-    if (data) {
-      setQuizData(data)
+    if (rawData) {
+      let normalizedData = { ...rawData }
+
+      if (rawData.texts && Array.isArray(rawData.texts)) {
+        normalizedData.questions = rawData.texts.map((t: any) => {
+          const availableWords = t.words ? `\n\nԲառերի ցանկ: ${t.words.join(', ')}` : ''
+          return {
+            id: t.id,
+            passage: `${t.passage}${availableWords}`,
+            subQuestions: [
+              {
+                number: 1,
+                options: { a: "Տեղադրեք բառերը համապատասխանաբար" }
+              }
+            ],
+            answers: t.answers
+          }
+        })
+        
+        normalizedData.answers = rawData.texts.map((t: any) => ({
+          id: t.id,
+          q1: Object.entries(t.answers || {}).map(([k, v]) => `(${k}) ${v}`).join(', ')
+        }))
+      }
+
+      setQuizData(normalizedData)
       setErrorMsg(null)
     } else {
       setErrorMsg(

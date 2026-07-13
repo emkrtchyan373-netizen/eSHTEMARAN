@@ -15,7 +15,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* 🔌 ԱՎԵԼԱՑՎԱԾ ՏՈՂԵՐԸ ԼՈԿԱԼ JS ՖԱՅԼԵՐԻ ՀԱՄԱՐ */
+    "allowJs": true,
+    "resolveJsonModule": true
   },
   "include": ["src"]
 }

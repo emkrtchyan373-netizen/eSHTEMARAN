@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import { PlusIcon } from '../components/Icons'
+import { quizRegistry } from '../data/quizRegistry' // 🎯 Ներմուծում ենք registry-ն հարցերը վերցնելու համար
 
 export default function TestsPage() {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedShtemarans, setSelectedShtemarans] = useState<number[]>([1])
   
-  // 🎯 Ավելացվեցին բոլոր բացակայող բաժինները (2-ից մինչև 13)
   const [sections, setSections] = useState([
     { id: 2, name: 'Section 2', label: 'Section 2' },
     { id: 3, name: 'Section 3', label: 'Section 3' },
@@ -40,23 +40,94 @@ export default function TestsPage() {
     ))
   }
 
-  const handleCreateTest = () => {
-    const totalQuestions = sections.reduce((sum, sec) => sum + sec.count, 0)
-    if (totalQuestions === 0) {
+ const handleCreateTest = () => {
+    const totalQuestionsCount = sections.reduce((sum, sec) => sum + sec.count, 0)
+    if (totalQuestionsCount === 0) {
       alert('Խնդրում ենք ընտրել գոնե 1 հարց։')
       return
     }
 
-    const firstShtemId = selectedShtemarans[0] || 1
+    try {
+      let pool: any[] = []
 
-    // 🎯 Ուղղվեց երթուղին համապատասխան QuizPage-ի սպասված /quiz/:shtemId/:sectionNum կառուցվածքին
-    navigate(`/quiz/${firstShtemId}/generated`, {
-      state: {
-        isGenerated: true,
-        shtemarans: selectedShtemarans,
-        sections: sections.filter(sec => sec.count > 0)
+      selectedShtemarans.forEach(shNum => {
+        sections.forEach(sec => {
+          if (sec.count === 0) return
+          
+          const registryKey = `${shNum}_${sec.id}`
+          const secData = quizRegistry[registryKey] as any
+          if (!secData) return
+
+          // Տեքստային բաժիններ (Section 2, 4 և այլն)
+          if (!secData.questions && secData.texts && Array.isArray(secData.texts)) {
+            secData.texts.forEach((t: any) => {
+              const availableWords = t.words ? `\n\nWords: ${t.words.join(', ')}` : ''
+              pool.push({
+                ...t,
+                id: t.id,
+                passage: `${t.passage}${availableWords}`,
+                subQuestions: [
+                  {
+                    number: 1,
+                    options: { a: "Տեղադրեք բառերը համապատասխանաբար" }
+                  }
+                ],
+                options: t.words || [],
+                answers: t.answers,
+                sectionId: sec.id
+              })
+            })
+          } 
+          // Սովորական հարցերով բաժիններ (Section 1, 3, 5, 6, 8, 10, 11, 12, 13)
+          else if (secData.questions && Array.isArray(secData.questions)) {
+            secData.questions.forEach((q: any, qIdx: number) => {
+              // 🎯 Ճիշտ վերցնենք պատասխանը՝ անկախ նրանից մասիվ է, թե սովորական դաշտ
+              const registryAnswer = secData.answers?.[qIdx]
+              const finalAnswer = registryAnswer !== undefined ? registryAnswer : (q.answer || q.correctAnswer)
+
+              pool.push({
+                ...q,
+                answer: finalAnswer,
+                sectionId: sec.id
+              })
+            })
+          }
+        })
+      })
+
+      let selectedQuestions: any[] = []
+      sections.forEach(sec => {
+        if (sec.count > 0) {
+          const secPool = pool.filter(p => p.sectionId === sec.id)
+          const shuffled = secPool.sort(() => 0.5 - Math.random()).slice(0, sec.count)
+          selectedQuestions = [...selectedQuestions, ...shuffled]
+        }
+      })
+
+      if (selectedQuestions.length === 0) {
+        alert('Ընտրված բաժիններում հարցեր չեն գտնվել։')
+        return
       }
-    })
+
+      // 🎯 Պահում ենք ամբողջական հարցերի ցուցակը և պատասխանները առանձին մասիվով
+      const finalQuizPayload = {
+        questions: selectedQuestions,
+        answers: selectedQuestions.map(q => q.answer)
+      }
+
+      navigate('/quiz/generated/run', {
+        state: {
+          isGeneratedQuiz: true,
+          quizData: finalQuizPayload
+        }
+      })
+
+      setIsModalOpen(false)
+
+    } catch (error) {
+      console.error("Error generating quiz:", error)
+      alert("Թեստի գեներացման սխալ:")
+    }
   }
 
   return (
@@ -83,7 +154,6 @@ export default function TestsPage() {
             
             <h3 style={{ margin: '0 0 16px 0', fontSize: '20px', textAlign: 'center', fontWeight: '600' }}>Կարգավորել Թեստը</h3>
             
-            {/* Շտեմարաններ */}
             <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
               {[1, 2, 3].map(num => {
                 const isSelected = selectedShtemarans.includes(num)
@@ -101,7 +171,6 @@ export default function TestsPage() {
               })}
             </div>
 
-            {/* Բաժիններ - Սքրոլով ցուցակ */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px', maxHeight: '280px', overflowY: 'auto', paddingRight: '5px' }}>
               {sections.map(sec => (
                 <div key={sec.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '8px', borderBottom: '1px solid #f0f0f0' }}>

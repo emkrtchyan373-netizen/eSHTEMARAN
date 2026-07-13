@@ -23,7 +23,7 @@ export default function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
-       
+         
       {/* 🧭 Սա կբռնի թե՛ /quiz/3/2, թե՛ /quiz-run/3/2 ուղիները */}
       <Route path="/quiz/:shtemId/:sectionNum" element={<QuizPage />} />
       <Route path="/quiz-run/:shtemId/:sectionNum" element={<QuizPage />} />
@@ -72,7 +72,28 @@ export default function App() {
         } 
       />
 
-      {/* 🎯 ՆՈՐ ԵՐԹՈՒՂԻ: Սա կբացի մոդալից գեներացված թեստը լուծելու էջը */}
+      {/* 🎯 ՃՇԳՐՏՎԱԾ ԵՐԹՈՒՂԻՆԵՐ ԳԵՆԵՐԱՑՎԱԾ ԹԵՍՏԵՐԻ ՀԱՄԱՐ */}
+      {/* Սա աշխատում է, երբ բացվում է ID-ով (օրինակ՝ /dashboard/tests/run/123) */}
+      <Route 
+        path="/dashboard/tests/run/:id" 
+        element={
+          <ProtectedRoute>
+            <GeneratedQuizRun />
+          </ProtectedRoute>
+        } 
+      />
+
+      {/* Սա աշխատում է որպես fallback, կամ եթե առանց ID-ի է փոխանցվում */}
+      <Route 
+        path="/dashboard/tests/run" 
+        element={
+          <ProtectedRoute>
+            <GeneratedQuizRun />
+          </ProtectedRoute>
+        } 
+      />
+
+      {/* Պահպանված է նաև քո հին երթուղին՝ ամեն դեպքում */}
       <Route 
         path="/dashboard/tests/run-generated" 
         element={

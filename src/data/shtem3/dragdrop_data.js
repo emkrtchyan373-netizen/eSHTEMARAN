@@ -1,5 +1,5 @@
 
-export const DRAGDROP_SECTION_7 = {
+export const SHTEM3_SECTION_7_DATA = {
   title: "Section 7 — Fill in the Gaps",
   instruction: "Fill in each gap with an appropriate word from the list below.",
   texts: [
@@ -615,7 +615,7 @@ export const DRAGDROP_SECTION_7 = {
 ]
 };
 
-export const DRAGDROP_SECTION_9 = {
+export const SHTEM3_SECTION_9_DATA = {
   title: "Section 9 — Fill in the Gaps with Prepositions/Adverbs",
   instruction: "Fill in the gaps with the prepositions or adverbs given below.",
   texts: [

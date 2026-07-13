@@ -1,5 +1,5 @@
 
-export const SHTEM3_SECTION_8_DATA = {
+export const SHTEM1_SECTION_8_DATA = {
 answers: [
 { id: 1, q1: false, q2: false, q3: true, q4: true, q5: true },
 { id: 2, q1: true, q2: true, q3: false, q4: true, q5: false },

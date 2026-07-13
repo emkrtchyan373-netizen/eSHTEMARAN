@@ -1,4 +1,4 @@
-export const SHTEM3_SECTION_2_DATA = {
+export const SHTEM1_SECTION_2_DATA = {
 answers: [
 {
 id: 1,

@@ -23,7 +23,7 @@ const getShtemData = (shtemNum: number, secNum: number) => {
   const moduleData = modules[filePath] || modules[backupPath];
 
   if (!moduleData) {
-    console.error(`❌ ՖԱՅԼԸ ՉԻ ԳՏՆՎԵԼ: Shtem ${shtemNum}, Section ${secNum}. Փնտրվող հասցեն՝ ${filePath}`);
+    console.warn(`⚠️ Ֆայլը բացակայում է: Shtem ${shtemNum}, Section ${secNum}. Օգտագործվում է դատարկ fallback:`);
     return emptyFallback;
   }
 
@@ -121,22 +121,22 @@ const getShtemData = (shtemNum: number, secNum: number) => {
   return emptyFallback;
 };
 
-// 🧭 Միասնական քարտեզ
+// 🧭 Միասնական քարտեզ (Հեռացվել են '1_1', '2_1', '3_1' հարցումները, որոնք չկան քո ֆայլերում)
 export const quizRegistry: { [key: string]: any } = {
   // Շտեմարան 1
-  '1_1': getShtemData(1, 1), '1_2': getShtemData(1, 2), '1_3': getShtemData(1, 3),
+  '1_2': getShtemData(1, 2), '1_3': getShtemData(1, 3),
   '1_4': getShtemData(1, 4), '1_5': getShtemData(1, 5), '1_6': getShtemData(1, 6),
   '1_7': getShtemData(1, 7), '1_8': getShtemData(1, 8), '1_9': getShtemData(1, 9),
   '1_10': getShtemData(1, 10), '1_11': getShtemData(1, 11), '1_12': getShtemData(1, 12), '1_13': getShtemData(1, 13),
 
   // Շտեմարան 2
-  '2_1': getShtemData(2, 1), '2_2': getShtemData(2, 2), '2_3': getShtemData(2, 3),
+  '2_2': getShtemData(2, 2), '2_3': getShtemData(2, 3),
   '2_4': getShtemData(2, 4), '2_5': getShtemData(2, 5), '2_6': getShtemData(2, 6),
   '2_7': getShtemData(2, 7), '2_8': getShtemData(2, 8), '2_9': getShtemData(2, 9),
   '2_10': getShtemData(2, 10), '2_11': getShtemData(2, 11), '2_12': getShtemData(2, 12), '2_13': getShtemData(2, 13),
 
   // Շտեմարան 3
-  '3_1': getShtemData(3, 1), '3_2': getShtemData(3, 2), '3_3': getShtemData(3, 3),
+  '3_2': getShtemData(3, 2), '3_3': getShtemData(3, 3),
   '3_4': getShtemData(3, 4), '3_5': getShtemData(3, 5), '3_6': getShtemData(3, 6),
   '3_7': getShtemData(3, 7), '3_8': getShtemData(3, 8), '3_9': getShtemData(3, 9),
   '3_10': getShtemData(3, 10), '3_11': getShtemData(3, 11), '3_12': getShtemData(3, 12), '3_13': getShtemData(3, 13),

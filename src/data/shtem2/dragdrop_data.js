@@ -1,4 +1,4 @@
-export const DRAGDROP_SECTION_7 = {
+export const SHTEM2_SECTION_7_DATA = {
 title: "Section 7 — Fill in the Gaps",
 instruction: "Fill in each gap with an appropriate word from the list below.",
 texts: [
@@ -265,7 +265,7 @@ answers: {
 ]
 };
 
-export const DRAGDROP_SECTION_9 = {
+export const SHTEM2_SECTION_9_DATA = {
 answers: [
 {
 id: 1,

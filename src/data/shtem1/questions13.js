@@ -1,4 +1,4 @@
-export const SHTEM3_SECTION_13_DATA = {
+export const SHTEM1_SECTION_13_DATA = {
 answers: [
 { id: 1, A: 3, B: 1, C: 2, D: 5 },
 { id: 2, A: 2, B: 5, C: 4, D: 6 },

@@ -1,4 +1,4 @@
-export const SHTEM3_SECTION_3_DATA = {
+export const SHTEM1_SECTION_3_DATA = {
 questions: [
 {
 "q": "When population is not checked by artificial means, __________ increases, putting more strain on limited natural resources.",
