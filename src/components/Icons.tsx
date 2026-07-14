@@ -45,6 +45,37 @@ export function GearIcon() {
   )
 }
 
+export function UsersIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
+      <circle cx="7" cy="7" r="3" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M2 16C2 13.5 4 12 7 12C10 12 12 13.5 12 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M13 7.5C14.4 7.5 15.5 6.4 15.5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M13.5 12.2C15.8 12.6 17.5 13.9 17.5 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+export function LockIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
+      <rect x="4" y="9" width="12" height="8" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M7 9V6.5C7 4.6 8.3 3 10 3C11.7 3 13 4.6 13 6.5V9" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="10" cy="13" r="1.3" fill="currentColor" />
+    </svg>
+  )
+}
+
+export function LogoutIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
+      <path d="M8 3H5C3.9 3 3 3.9 3 5V15C3 16.1 3.9 17 5 17H8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M13 6L17 10L13 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M17 10H7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 export function BellIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>

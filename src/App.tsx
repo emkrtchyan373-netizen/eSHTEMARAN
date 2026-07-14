@@ -8,7 +8,10 @@ import SettingsPage from './pages/SettingsPage'
 import ProgressPage from './pages/ProgressPage'
 import ShtemaranPage from './pages/ShtemaranPage'
 import TestsPage from './pages/TestsPage'
-import ProtectedRoute from './components/ProtectedRoute' 
+import ProtectedRoute from './components/ProtectedRoute'
+import RequireClassAccess from './components/RequireClassAccess'
+import ClassroomsPage from './pages/ClassroomsPage'
+import ClassroomDetailPage from './pages/ClassroomDetailPage'
 
 // Նոր դիզայնով QuizPage էջը
 import QuizPage from './pages/QuizPage'
@@ -22,12 +25,6 @@ export default function App() {
 
   return (
     <MobileLayoutProvider>
-      {/*
-        AnimatePresence watches for children keyed by location.pathname.
-        When the key changes (route change), exit animation plays on the
-        old page before the new one mounts.
-        mode="wait" ensures only one page is visible at a time.
-      */}
       <AnimatePresence mode="wait" initial={false}>
         <Routes location={location} key={location.pathname}>
           {/* 🏁 Հանրային էջեր */}
@@ -36,8 +33,8 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
              
           {/* 🧭 Սա կբռնի թե՛ /quiz/3/2, թե՛ /quiz-run/3/2 ուղիները */}
-          <Route path="/quiz/:shtemId/:sectionNum" element={<QuizPage />} />
-          <Route path="/quiz-run/:shtemId/:sectionNum" element={<QuizPage />} />
+          <Route path="/quiz/:shtemId/:sectionNum" element={<RequireClassAccess><QuizPage /></RequireClassAccess>} />
+          <Route path="/quiz-run/:shtemId/:sectionNum" element={<RequireClassAccess><QuizPage /></RequireClassAccess>} />
 
           {/* 🛠️ Եթե օգտատերը մտնի /dashboard, նրան ավտոմատ կտանի /dashboard/tests */}
           <Route 
@@ -66,52 +63,80 @@ export default function App() {
               </ProtectedRoute>
             } 
           />
-          <Route 
-            path="/dashboard/shtemaran/:id" 
+          <Route
+            path="/dashboard/shtemaran/:id"
             element={
               <ProtectedRoute>
-                <ShtemaranPage />
+                <RequireClassAccess>
+                  <ShtemaranPage />
+                </RequireClassAccess>
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/dashboard/tests" 
+          <Route
+            path="/dashboard/tests"
             element={
               <ProtectedRoute>
-                <TestsPage />
+                <RequireClassAccess>
+                  <TestsPage />
+                </RequireClassAccess>
               </ProtectedRoute>
-            } 
+            }
+          />
+
+          {/* 🏫 Դասարաններ */}
+          <Route
+            path="/dashboard/classrooms"
+            element={
+              <ProtectedRoute>
+                <ClassroomsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/classrooms/:id"
+            element={
+              <ProtectedRoute>
+                <ClassroomDetailPage />
+              </ProtectedRoute>
+            }
           />
 
           {/* 🎯 ՃՇԳՐՏՎԱԾ ԵՐԹՈՒՂԻՆԵՐ ԳԵՆԵՐԱՑՎԱԾ ԹԵՍՏԵՐԻ ՀԱՄԱՐ */}
           {/* Սա աշխատում է, երբ բացվում է ID-ով (օրինակ՝ /dashboard/tests/run/123) */}
-          <Route 
-            path="/dashboard/tests/run/:id" 
+          <Route
+            path="/dashboard/tests/run/:id"
             element={
               <ProtectedRoute>
-                <GeneratedQuizRun />
+                <RequireClassAccess>
+                  <GeneratedQuizRun />
+                </RequireClassAccess>
               </ProtectedRoute>
-            } 
+            }
           />
 
           {/* Սա աշխատում է որպես fallback, կամ եթե առանց ID-ի է փոխանցվում */}
-          <Route 
-            path="/dashboard/tests/run" 
+          <Route
+            path="/dashboard/tests/run"
             element={
               <ProtectedRoute>
-                <GeneratedQuizRun />
+                <RequireClassAccess>
+                  <GeneratedQuizRun />
+                </RequireClassAccess>
               </ProtectedRoute>
-            } 
+            }
           />
 
           {/* Պահպանված է նաև քո հին երթուղին՝ ամեն դեպքում */}
-          <Route 
-            path="/dashboard/tests/run-generated" 
+          <Route
+            path="/dashboard/tests/run-generated"
             element={
               <ProtectedRoute>
-                <GeneratedQuizRun />
+                <RequireClassAccess>
+                  <GeneratedQuizRun />
+                </RequireClassAccess>
               </ProtectedRoute>
-            } 
+            }
           />
         </Routes>
       </AnimatePresence>

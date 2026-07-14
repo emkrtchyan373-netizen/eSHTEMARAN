@@ -5,6 +5,8 @@
   border-right: 1px solid #edf0f7;
   min-height: 100vh;
   padding: 24px 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar__logo {
@@ -45,6 +47,10 @@
   color: var(--purple);
 }
 
+.sidebar__link--locked {
+  opacity: 0.5;
+}
+
 .sidebar__icon {
   display: flex;
   align-items: center;
@@ -55,5 +61,26 @@
 }
 
 .sidebar__label {
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.sidebar__footer {
+  margin-top: auto;
+  padding: 16px 16px 0;
+  border-top: 1px solid #edf0f7;
+}
+
+.sidebar__logout {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: #ea4335;
+}
+
+.sidebar__logout:hover {
+  background: #fdf1f0;
 }

@@ -5,7 +5,7 @@ import DashboardHeader from './DashboardHeader'
 import { useIsMobile } from '../hooks/useIsMobile'
 import './DashboardLayout.css'
 
-type ActiveItem = 'shtemaran-1' | 'shtemaran-2' | 'shtemaran-3' | 'progress' | 'tests' | 'settings'
+type ActiveItem = 'shtemaran-1' | 'shtemaran-2' | 'shtemaran-3' | 'progress' | 'tests' | 'classrooms' | 'settings'
 
 interface DashboardLayoutProps {
   active: ActiveItem
