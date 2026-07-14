@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
+import PageTransition from '../components/PageTransition'
 
 const sections = Array.from({ length: 12 }, (_, i) => `Section ${i + 2}`)
 
@@ -8,6 +9,7 @@ export default function ShtemaranPage() {
   const active = `shtemaran-${id}` as 'shtemaran-1' | 'shtemaran-2' | 'shtemaran-3'
 
   return (
+    <PageTransition>
     <DashboardLayout active={active}>
       <div className="dash-card">
         <div className="dash-card__banner" />
@@ -37,5 +39,6 @@ export default function ShtemaranPage() {
         </div>
       </div>
     </DashboardLayout>
+    </PageTransition>
   )
 }

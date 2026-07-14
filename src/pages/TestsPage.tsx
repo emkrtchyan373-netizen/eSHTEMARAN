@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import { PlusIcon } from '../components/Icons'
 import { quizRegistry } from '../data/quizRegistry' // 🎯 Ներմուծում ենք registry-ն հարցերը վերցնելու համար
+import PageTransition from '../components/PageTransition'
 
 export default function TestsPage() {
   const navigate = useNavigate()
@@ -131,6 +132,7 @@ export default function TestsPage() {
   }
 
   return (
+    <PageTransition>
     <DashboardLayout active="tests">
       <div className="dash-card">
         <div className="dash-card__banner" />
@@ -193,5 +195,6 @@ export default function TestsPage() {
         </div>
       )}
     </DashboardLayout>
+    </PageTransition>
   )
 }

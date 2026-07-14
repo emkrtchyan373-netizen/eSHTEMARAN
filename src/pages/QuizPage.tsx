@@ -11,6 +11,7 @@ import TransformView from '../components/questions/TransformView'
 import WordBankView from '../components/questions/WordBankView'
 import MatchingView from '../components/questions/MatchingView'
 import { quizRegistry } from '../data/quizRegistry'
+import PageTransition from '../components/PageTransition'
 import './QuizPage.css'
 
 export default function QuizPage() {
@@ -310,6 +311,7 @@ export default function QuizPage() {
   const sectionsList = Array.from({ length: 12 }, (_, i) => String(i + 2))
 
   return (
+    <PageTransition>
     <div className="quiz-page">
       <QuizHeader section={isGenerated ? "Գեներացված Թեստ" : `Section ${sectionNum}`} />
 
@@ -382,5 +384,6 @@ export default function QuizPage() {
         </nav>
       )}
     </div>
+    </PageTransition>
   )
 }

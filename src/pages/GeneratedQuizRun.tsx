@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import PageTransition from '../components/PageTransition'
 
 // Ներմուծում ենք լոկալ տվյալները, որպեսզի էջը կարողանա random հարցեր հավաքել
 import { SHTEM1_SECTION_2_DATA as s1_s2 } from '../data/shtem1/questions2.js'
@@ -161,6 +162,7 @@ export default function GeneratedQuizRun() {
   if (loading) return <div style={{ padding: '40px', textAlign: 'center', fontSize: '18px' }}>Հարցերը պատահական ընտրվում են...</div>
 
   return (
+    <PageTransition>
     <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto', fontFamily: 'sans-serif', color: '#333' }}>
       <button 
         onClick={() => navigate('/dashboard/tests')} 
@@ -188,5 +190,6 @@ export default function GeneratedQuizRun() {
         ))}
       </div>
     </div>
+    </PageTransition>
   )
 }

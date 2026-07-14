@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient'
 import DashboardLayout from '../components/DashboardLayout'
 import { MailIcon } from '../components/Icons'
+import PageTransition from '../components/PageTransition'
 import './SettingsPage.css'
 
 export default function SettingsPage() {
@@ -101,6 +102,7 @@ export default function SettingsPage() {
   }
 
   return (
+    <PageTransition>
     <DashboardLayout active="settings">
       <div className="dash-card settings-card">
         <div className="dash-card__banner" />
@@ -190,5 +192,6 @@ export default function SettingsPage() {
         </div>
       </div>
     </DashboardLayout>
+    </PageTransition>
   )
 }

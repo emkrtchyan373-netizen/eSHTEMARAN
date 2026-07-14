@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { AnimatePresence } from 'framer-motion'
 import MobileLayoutProvider from './components/MobileLayoutProvider'
 import LandingPage from './pages/LandingPage'
 import SignupPage from './pages/SignupPage'
@@ -16,93 +17,104 @@ import QuizPage from './pages/QuizPage'
 import GeneratedQuizRun from './pages/GeneratedQuizRun'
 
 export default function App() {
+  // useLocation must be called inside BrowserRouter (in main.tsx) — App is already a child
+  const location = useLocation()
+
   return (
     <MobileLayoutProvider>
-    <Routes>
-      {/* 🏁 Հանրային էջեր */}
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/login" element={<LoginPage />} />
-         
-      {/* 🧭 Սա կբռնի թե՛ /quiz/3/2, թե՛ /quiz-run/3/2 ուղիները */}
-      <Route path="/quiz/:shtemId/:sectionNum" element={<QuizPage />} />
-      <Route path="/quiz-run/:shtemId/:sectionNum" element={<QuizPage />} />
+      {/*
+        AnimatePresence watches for children keyed by location.pathname.
+        When the key changes (route change), exit animation plays on the
+        old page before the new one mounts.
+        mode="wait" ensures only one page is visible at a time.
+      */}
+      <AnimatePresence mode="wait" initial={false}>
+        <Routes location={location} key={location.pathname}>
+          {/* 🏁 Հանրային էջեր */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+             
+          {/* 🧭 Սա կբռնի թե՛ /quiz/3/2, թե՛ /quiz-run/3/2 ուղիները */}
+          <Route path="/quiz/:shtemId/:sectionNum" element={<QuizPage />} />
+          <Route path="/quiz-run/:shtemId/:sectionNum" element={<QuizPage />} />
 
-      {/* 🛠️ Եթե օգտատերը մտնի /dashboard, նրան ավտոմատ կտանի /dashboard/tests */}
-      <Route 
-        path="/dashboard" 
-        element={
-          <ProtectedRoute>
-            <Navigate to="/dashboard/tests" replace />
-          </ProtectedRoute>
-        } 
-      />
+          {/* 🛠️ Եթե օգտատերը մտնի /dashboard, նրան ավտոմատ կտանի /dashboard/tests */}
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute>
+                <Navigate to="/dashboard/tests" replace />
+              </ProtectedRoute>
+            } 
+          />
 
-      {/* 🔒 Պաշտպանված էջեր */}
-      <Route 
-        path="/dashboard/settings" 
-        element={
-          <ProtectedRoute>
-            <SettingsPage />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/progress" 
-        element={
-          <ProtectedRoute>
-            <ProgressPage />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/shtemaran/:id" 
-        element={
-          <ProtectedRoute>
-            <ShtemaranPage />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/tests" 
-        element={
-          <ProtectedRoute>
-            <TestsPage />
-          </ProtectedRoute>
-        } 
-      />
+          {/* 🔒 Պաշտպանված էջեր */}
+          <Route 
+            path="/dashboard/settings" 
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/progress" 
+            element={
+              <ProtectedRoute>
+                <ProgressPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/shtemaran/:id" 
+            element={
+              <ProtectedRoute>
+                <ShtemaranPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/tests" 
+            element={
+              <ProtectedRoute>
+                <TestsPage />
+              </ProtectedRoute>
+            } 
+          />
 
-      {/* 🎯 ՃՇԳՐՏՎԱԾ ԵՐԹՈՒՂԻՆԵՐ ԳԵՆԵՐԱՑՎԱԾ ԹԵՍՏԵՐԻ ՀԱՄԱՐ */}
-      {/* Սա աշխատում է, երբ բացվում է ID-ով (օրինակ՝ /dashboard/tests/run/123) */}
-      <Route 
-        path="/dashboard/tests/run/:id" 
-        element={
-          <ProtectedRoute>
-            <GeneratedQuizRun />
-          </ProtectedRoute>
-        } 
-      />
+          {/* 🎯 ՃՇԳՐՏՎԱԾ ԵՐԹՈՒՂԻՆԵՐ ԳԵՆԵՐԱՑՎԱԾ ԹԵՍՏԵՐԻ ՀԱՄԱՐ */}
+          {/* Սա աշխատում է, երբ բացվում է ID-ով (օրինակ՝ /dashboard/tests/run/123) */}
+          <Route 
+            path="/dashboard/tests/run/:id" 
+            element={
+              <ProtectedRoute>
+                <GeneratedQuizRun />
+              </ProtectedRoute>
+            } 
+          />
 
-      {/* Սա աշխատում է որպես fallback, կամ եթե առանց ID-ի է փոխանցվում */}
-      <Route 
-        path="/dashboard/tests/run" 
-        element={
-          <ProtectedRoute>
-            <GeneratedQuizRun />
-          </ProtectedRoute>
-        } 
-      />
+          {/* Սա աշխատում է որպես fallback, կամ եթե առանց ID-ի է փոխանցվում */}
+          <Route 
+            path="/dashboard/tests/run" 
+            element={
+              <ProtectedRoute>
+                <GeneratedQuizRun />
+              </ProtectedRoute>
+            } 
+          />
 
-      {/* Պահպանված է նաև քո հին երթուղին՝ ամեն դեպքում */}
-      <Route 
-        path="/dashboard/tests/run-generated" 
-        element={
-          <ProtectedRoute>
-            <GeneratedQuizRun />
-          </ProtectedRoute>
-        } 
-      />
-    </Routes>
+          {/* Պահպանված է նաև քո հին երթուղին՝ ամեն դեպքում */}
+          <Route 
+            path="/dashboard/tests/run-generated" 
+            element={
+              <ProtectedRoute>
+                <GeneratedQuizRun />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </AnimatePresence>
     </MobileLayoutProvider>
   )
 }

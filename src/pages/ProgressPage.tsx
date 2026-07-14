@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import DashboardLayout from '../components/DashboardLayout'
 import { supabase } from '../supabaseClient'
+import PageTransition from '../components/PageTransition'
 
 interface QuizResult {
   id: string
@@ -90,13 +91,16 @@ export default function ProgressPage() {
 
   if (loading) {
     return (
+      <PageTransition>
       <DashboardLayout active="progress">
         <div style={{ padding: '40px', textAlign: 'center', fontSize: '18px', color: '#666' }}>Բեռնվում է...</div>
       </DashboardLayout>
+      </PageTransition>
     )
   }
 
   return (
+    <PageTransition>
     <DashboardLayout active="progress">
       <div className="dash-card" style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 24px rgba(0,0,0,0.02)' }}>
         
@@ -149,6 +153,7 @@ export default function ProgressPage() {
 
       </div>
     </DashboardLayout>
+    </PageTransition>
   )
 }
 

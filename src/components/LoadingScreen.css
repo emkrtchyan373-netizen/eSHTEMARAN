@@ -1,0 +1,109 @@
+/* ─── Loading Screen Overlay ──────────────────────────────────────────────── */
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 8, 18, 0.97);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+}
+
+/* ─── Wrapper ─────────────────────────────────────────────────────────────── */
+
+.loading-screen__logo-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── Ambient glow — slow, dreamy pulse, no hard edges ────────────────────── */
+
+.loading-screen__glow {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(120, 60, 240, 0.38) 0%,
+    rgba(87,  0, 123, 0.18) 45%,
+    transparent 70%
+  );
+  /* Slow, calming pulse */
+  animation: glow-pulse 3.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { transform: scale(1);    opacity: 0.80; }
+  50%       { transform: scale(1.20); opacity: 0.35; }
+}
+
+/* ─── Circular clip — hides white MP4 corners ────────────────────────────── */
+
+.loading-screen__clip {
+  position: relative;
+  z-index: 1;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  /* Very soft glow on the circle edge — no hard ring lines */
+  box-shadow:
+    0 0 0 1px rgba(150, 90, 255, 0.15),
+    0 0 24px 10px rgba(111, 40, 220, 0.28),
+    0 0 56px 20px rgba(87,   0, 123, 0.12);
+  /* Slow, gentle breathing — not bouncy */
+  animation: clip-breathe 3.5s ease-in-out infinite;
+}
+
+@keyframes clip-breathe {
+  0%, 100% { transform: scale(1);     box-shadow: 0 0 0 1px rgba(150, 90, 255, 0.15), 0 0 24px 10px rgba(111, 40, 220, 0.28), 0 0 56px 20px rgba(87, 0, 123, 0.12); }
+  50%       { transform: scale(1.04); box-shadow: 0 0 0 1px rgba(150, 90, 255, 0.25), 0 0 36px 16px rgba(111, 40, 220, 0.40), 0 0 80px 28px rgba(87, 0, 123, 0.18); }
+}
+
+/* ─── Video — oversized so white corners fall outside the circle clip ──────── */
+
+.loading-screen__video {
+  /* ~30% larger than the 140px clip so white edges are cropped */
+  width: 182px;
+  height: 182px;
+  margin: -21px;
+  object-fit: cover;
+  display: block;
+  /* Smooth fade in via CSS when video starts */
+  animation: video-fadein 0.6s ease-in-out both;
+  animation-delay: 0.2s;
+}
+
+@keyframes video-fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── Label ──────────────────────────────────────────────────────────────── */
+
+.loading-screen__label {
+  margin-top: 30px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.32);
+  /* Slow, soft pulse — matches the glow rhythm */
+  animation: label-pulse 3.5s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+@keyframes label-pulse {
+  0%, 100% { opacity: 0.32; }
+  50%       { opacity: 0.65; }
+}

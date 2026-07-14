@@ -1,4 +1,4 @@
-import { SearchIcon, BellIcon } from './Icons'
+import { useNavigate } from 'react-router-dom'
 import './QuizLayout.css'
 
 interface QuizHeaderProps {
@@ -6,39 +6,48 @@ interface QuizHeaderProps {
 }
 
 export default function QuizHeader({ section }: QuizHeaderProps) {
+  const navigate = useNavigate()
+
+  // 🎯 Եթե /mypage-ը դատարկ է, այստեղ փոխիր քո ճիշտ էջի հասցեով (օրինակ՝ '/dashboard' կամ '/profile')
+  const DASHBOARD_PATH = '/dashboard/settings' 
+
+  const handleProfileClick = () => {
+    navigate(DASHBOARD_PATH)
+  }
+
   return (
-    <header className="quiz-header">
+    <header className="quiz-header" style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
       <img src="/assets/logo.png" alt="Logo" className="quiz-header__logo" />
-      <h1 className="quiz-header__section">{section}</h1>
+      <h1 className="quiz-header__section" style={{ marginLeft: '15px' }}>{section}</h1>
 
-      <div className="quiz-header__search">
-        <SearchIcon />
-        <span>Search</span>
-      </div>
+      {/* 🎯 Որոնումը և Զանգակը ամբողջությամբ ջնջված են */}
 
-      <button type="button" className="quiz-header__bell" aria-label="Notifications">
-        <BellIcon />
-      </button>
-
-      {/* 🎯 Պրոֆիլի նկարի բլոկը՝ պաշտպանված կոտրվելուց */}
-      <div className="quiz-header__avatar-container" style={{
-        width: '38px',
-        height: '38px',
-        borderRadius: '50%',
-        backgroundColor: '#f0f0f0',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        border: '1px solid #e0dcd3'
-      }}>
+      {/* 🎯 margin-left: 'auto'-ն հրում է մարդուկին դեպի ամենաաջ անկյունը */}
+      <button 
+        type="button"
+        onClick={handleProfileClick}
+        className="quiz-header__avatar-container" 
+        style={{
+          width: '38px',
+          height: '38px',
+          borderRadius: '50%',
+          backgroundColor: '#f0f0f0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          border: '1px solid #e0dcd3',
+          cursor: 'pointer',
+          padding: 0,
+          marginLeft: 'auto' // 🔥 Աջ տեղափոխելու համար
+        }}
+      >
         <img 
           src="/assets/avatar.png" 
           alt="Profile" 
           className="quiz-header__avatar" 
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           onError={(e) => {
-            // Եթե /assets/avatar.png-ն չգտնվի, ավտոմատ կփոխարինվի սիրուն SVG մարդուկով
             e.currentTarget.style.display = 'none';
             const parent = e.currentTarget.parentElement;
             if (parent) {
@@ -46,7 +55,7 @@ export default function QuizHeader({ section }: QuizHeaderProps) {
             }
           }}
         />
-      </div>
+      </button>
     </header>
   )
 }

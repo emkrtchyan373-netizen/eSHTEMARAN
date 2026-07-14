@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import { ArrowLeftIcon, ArrowRightIcon } from '../components/Icons'
+import PageTransition from '../components/PageTransition'
 import './LandingPage.css'
 
 const books = [
@@ -17,6 +18,7 @@ export default function LandingPage() {
   const next = () => setActiveSlide((s) => (s === 2 ? 0 : s + 1))
 
   return (
+    <PageTransition>
     <div className="page landing">
       <Navbar />
 
@@ -97,5 +99,6 @@ export default function LandingPage() {
         </div>
       </section>
     </div>
+    </PageTransition>
   )
 }

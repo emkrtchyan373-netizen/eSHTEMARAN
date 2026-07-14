@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
+import PageTransition from '../components/PageTransition'
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState('')
@@ -67,6 +68,7 @@ export default function SignupPage() {
   }
 }
   return (
+    <PageTransition>
     <div style={{
       display: 'flex',
       justifyContent: 'center',
@@ -212,5 +214,6 @@ export default function SignupPage() {
 
       </div>
     </div>
+    </PageTransition>
   )
 }
