@@ -12,6 +12,8 @@ import ProtectedRoute from './components/ProtectedRoute'
 import RequireClassAccess from './components/RequireClassAccess'
 import ClassroomsPage from './pages/ClassroomsPage'
 import ClassroomDetailPage from './pages/ClassroomDetailPage'
+import AdminLoginPage from './pages/AdminLoginPage'
+import AdminPanelPage from './pages/AdminPanelPage'
 
 // Նոր դիզայնով QuizPage էջը
 import QuizPage from './pages/QuizPage'
@@ -83,6 +85,10 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* 🛡️ Ադմին — առանձին մուտք և վահանակ */}
+          <Route path="/admin" element={<AdminLoginPage />} />
+          <Route path="/admin/panel" element={<AdminPanelPage />} />
 
           {/* 🏫 Դասարաններ */}
           <Route

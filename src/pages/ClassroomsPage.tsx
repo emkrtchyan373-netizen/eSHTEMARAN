@@ -63,6 +63,7 @@ function TeacherClassrooms({ userId }: { userId: string }) {
   const navigate = useNavigate()
   const [classrooms, setClassrooms] = useState<Classroom[]>([])
   const [listLoading, setListLoading] = useState(true)
+  const [approvalStatus, setApprovalStatus] = useState<'approved' | 'pending' | 'denied'>('approved')
   const [showCreate, setShowCreate] = useState(false)
   const [name, setName] = useState('')
   const [studentLimit, setStudentLimit] = useState(30)
@@ -80,6 +81,22 @@ function TeacherClassrooms({ userId }: { userId: string }) {
   }, [])
 
   useEffect(() => { fetchClassrooms() }, [fetchClassrooms])
+
+  // Ուսուցչի հաշվի հաստատման կարգավիճակը (ադմինի որոշումը)
+  useEffect(() => {
+    if (!userId) return
+    supabase
+      .from('teacher_approvals')
+      .select('status')
+      .eq('user_id', userId)
+      .maybeSingle()
+      .then(({ data }) => {
+        // Հին հաշիվները, որոնց համար գրառում չկա, համարվում են հաստատված
+        if (data?.status === 'pending' || data?.status === 'denied') {
+          setApprovalStatus(data.status)
+        }
+      })
+  }, [userId])
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -117,6 +134,26 @@ function TeacherClassrooms({ userId }: { userId: string }) {
     navigator.clipboard.writeText(code)
     setCopiedId(id)
     setTimeout(() => setCopiedId(null), 2000)
+  }
+
+  if (approvalStatus !== 'approved') {
+    return (
+      <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>
+          {approvalStatus === 'pending' ? '⏳' : '⛔'}
+        </div>
+        <h1 style={{ fontSize: '22px', fontWeight: 600, color: '#191919', marginBottom: '10px' }}>
+          {approvalStatus === 'pending'
+            ? 'Ձեր ուսուցչի հաշիվը սպասում է հաստատման'
+            : 'Ձեր ուսուցչի հաշվի հայցը մերժվել է'}
+        </h1>
+        <p style={{ color: '#666', fontSize: '15px', maxWidth: '420px', margin: '0 auto' }}>
+          {approvalStatus === 'pending'
+            ? 'Ադմինիստրատորը պետք է հաստատի ձեր հաշիվը, որից հետո կկարողանաք ստեղծել դասարաններ:'
+            : 'Դասարաններ ստեղծելու հնարավորությունն արգելափակված է: Հարցերի դեպքում կապվեք ադմինիստրատորի հետ:'}
+        </p>
+      </div>
+    )
   }
 
   return (

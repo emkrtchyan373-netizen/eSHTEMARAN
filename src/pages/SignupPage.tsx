@@ -33,13 +33,33 @@ export default function SignupPage() {
       })
 
       if (authError) {
-        alert('Գրանցման սխալ: ' + authError.message)
+        // 🔐 Մեկ էլ. փոստ = մեկ հաշիվ մեկ դերով
+        if (authError.message.toLowerCase().includes('already registered')) {
+          alert('Այս էլ. փոստն արդեն գրանցված է: Նույն էլ. փոստով հնարավոր չէ ստեղծել այլ դերի հաշիվ: Մուտք գործեք ձեր գործող հաշվով:')
+        } else {
+          alert('Գրանցման սխալ: ' + authError.message)
+        }
+        return
+      }
+
+      // Երբ email confirmation-ը միացված է, Supabase-ը կրկնվող էլ. փոստի դեպքում
+      // սխալ չի վերադարձնում, այլ վերադարձնում է user՝ դատարկ identities ցուցակով:
+      if (authData?.user && authData.user.identities && authData.user.identities.length === 0) {
+        alert('Այս էլ. փոստն արդեն գրանցված է: Նույն էլ. փոստով հնարավոր չէ ստեղծել այլ դերի հաշիվ: Մուտք գործեք ձեր գործող հաշվով:')
         return
       }
 
       if (authData?.user) {
-        alert('Գրանցումը հաջողությամբ կատարվեց:')
-        navigate('/dashboard')
+        if (role === 'teacher') {
+          // 🔐 Ուսուցչի հաշիվը հասանելի չէ մինչև ադմինի հաստատումը.
+          // փակում ենք սեսիան և վերադարձնում մուտքի էջ:
+          alert('Գրանցումը կատարվեց: Ձեր ուսուցչի հաշիվը կակտիվանա ադմինիստրատորի հաստատումից հետո:')
+          await supabase.auth.signOut()
+          navigate('/login')
+        } else {
+          alert('Գրանցումը հաջողությամբ կատարվեց:')
+          navigate('/dashboard')
+        }
       }
     } catch (err: any) {
       alert('Տեղի է ունեցել սխալ: ' + err.message)

@@ -25,15 +25,61 @@ export default function LoginPage() {
       password: password,
     })
 
-    setLoading(false)
-
     if (error) {
+      setLoading(false)
       alert('Մուտքի սխալ: ' + error.message)
-    } else {
-      console.log('Մուտքը հաջողվեց:', loginResult)
-      alert('Դուք հաջողությամբ մուտք գործեցիք:')
-      navigate('/dashboard/settings') 
+      return
     }
+
+    // 🔐 Դերի ստուգում. հաշիվը կապված է մեկ դերի հետ:
+    // Աշակերտի էլ. փոստով հնարավոր չէ մուտք գործել որպես ուսուցիչ և հակառակը:
+    const user = loginResult.user
+    let accountRole = user?.user_metadata?.role as string | undefined
+
+    if (accountRole !== 'student' && accountRole !== 'teacher') {
+      const { data: dbUser } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user!.id)
+        .single()
+      accountRole = dbUser?.role === 'teacher' ? 'teacher' : 'student'
+    }
+
+    if (accountRole !== role) {
+      await supabase.auth.signOut()
+      setLoading(false)
+      alert(
+        accountRole === 'student'
+          ? 'Այս էլ. փոստը գրանցված է որպես ԱՇԱԿԵՐՏԻ հաշիվ: Նույն էլ. փոստով ուսուցչի հաշիվ մուտք գործել հնարավոր չէ: Ընտրեք «Student / Աշակերտ» դերը:'
+          : 'Այս էլ. փոստը գրանցված է որպես ՈՒՍՈՒՑՉԻ հաշիվ: Նույն էլ. փոստով աշակերտի հաշիվ մուտք գործել հնարավոր չէ: Ընտրեք «Teacher / Ուսուցիչ» դերը:'
+      )
+      return
+    }
+
+    // 🔐 Ուսուցչի հաշիվը հասանելի է միայն ադմինի հաստատումից հետո
+    if (accountRole === 'teacher') {
+      const { data: approval } = await supabase
+        .from('teacher_approvals')
+        .select('status')
+        .eq('user_id', user!.id)
+        .maybeSingle()
+
+      // Հին հաշիվները, որոնց համար գրառում չկա, համարվում են հաստատված
+      if (approval?.status === 'pending' || approval?.status === 'denied') {
+        await supabase.auth.signOut()
+        setLoading(false)
+        alert(
+          approval.status === 'pending'
+            ? 'Ձեր ուսուցչի հաշիվը դեռ սպասում է ադմինիստրատորի հաստատմանը: Փորձեք ավելի ուշ:'
+            : 'Ձեր ուսուցչի հաշվի հայցը մերժվել է: Հարցերի դեպքում կապվեք ադմինիստրատորի հետ:'
+        )
+        return
+      }
+    }
+
+    setLoading(false)
+    alert('Դուք հաջողությամբ մուտք գործեցիք:')
+    navigate('/dashboard/settings')
   }
 
   return (
