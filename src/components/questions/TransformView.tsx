@@ -79,6 +79,9 @@ export default function TransformView({ data, correctAnswers, onAnswer, onNext, 
             }
           }
 
+          // Strip leading "N. " or "N) " prefix already embedded in the text
+          textContent = textContent.replace(/^\d+[\.\)]\s*/, '')
+
           // Color logic
           let bgColor = '#fff'
           let bColor = '#e2e8f0'

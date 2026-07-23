@@ -72,13 +72,13 @@ export default function MatchingView({ data, correctAnswersObj, onAnswer, onNext
       {/* 📝 Բացատրությունների ցուցակ (Դեպի ձախ) */}
       <div style={{ marginBottom: '25px', backgroundColor: '#fcfcfc', padding: '15px', borderRadius: '8px', border: '1px solid #f0f0f0' }}>
         <h4 style={{ color: '#7f8c8d', marginBottom: '12px', fontSize: '16px' }}>Definitions / Explanations:</h4>
-        <ol style={{ paddingLeft: '20px', margin: 0, lineHeight: '2' }}>
+        <div style={{ paddingLeft: '4px', margin: 0, lineHeight: '2' }}>
           {data?.explanations?.map((exp, idx) => (
-            <li key={idx} style={{ fontSize: '16px', color: '#34495e', marginBottom: '6px' }}>
-              <strong>{idx}.</strong> {exp}
-            </li>
+            <div key={idx} style={{ fontSize: '16px', color: '#34495e', marginBottom: '6px' }}>
+              <strong>{idx + 1}.</strong> {exp}
+            </div>
           ))}
-        </ol>
+        </div>
       </div>
 
       {/* 🔀 Համապատասխանեցման հատված */}
@@ -125,10 +125,10 @@ export default function MatchingView({ data, correctAnswersObj, onAnswer, onNext
                     cursor: isSubmitted ? 'default' : 'pointer'
                   }}
                 >
-                  <option value={-1}>-- Select Definition --</option>
-                  {data?.explanations?.map((_, idx) => (
+                  <option value={-1}>-- Select --</option>
+                  {data?.explanations?.map((_exp, idx) => (
                     <option key={idx} value={idx}>
-                      Definition {idx}
+                      Sentence {idx + 1}
                     </option>
                   ))}
                 </select>
@@ -136,7 +136,7 @@ export default function MatchingView({ data, correctAnswersObj, onAnswer, onNext
                 {/* 💡 Հուշում սխալ ընտրության դեպքում */}
                 {isSubmitted && !isCorrect && (
                   <span style={{ color: '#e74c3c', fontSize: '13px', fontWeight: 'bold', marginTop: '4px' }}>
-                    ❌ Incorrect (Correct is {correctAnswersMap[letter]})
+                    ❌ Incorrect (Correct is Sentence {Number(correctAnswersMap[letter]) + 1})
                   </span>
                 )}
                 {isSubmitted && isCorrect && (

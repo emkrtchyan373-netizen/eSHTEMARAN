@@ -5,6 +5,11 @@
   background: var(--white);
 }
 
+/* Override header height CSS variable for quiz pages */
+.quiz-page {
+  --header-height: 64px;
+}
+
 .quiz-page__body {
   display: flex;
   min-height: calc(100vh - var(--header-height));
@@ -23,15 +28,11 @@
   padding: 24px 27px 0;
 }
 
-/* Header */
+/* Header — visual styles are controlled by inline styles in QuizHeader.tsx */
 .quiz-header {
   display: flex;
   align-items: center;
-  height: var(--header-height);
-  padding: 0 34px 0 34px;
-  background: var(--header-bg);
-  border-bottom: 1px solid #ececec;
-  gap: 0;
+  width: 100%;
 }
 
 .quiz-header__logo {
@@ -42,12 +43,8 @@
 }
 
 .quiz-header__section {
-  margin-left: 113px;
-  font-size: 24px;
-  font-weight: 500;
-  color: var(--section-text);
-  line-height: 1.5;
-  white-space: nowrap;
+  /* Controlled by inline styles in QuizHeader.tsx */
+  display: none;
 }
 
 .quiz-header__search {
