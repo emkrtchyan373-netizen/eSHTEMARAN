@@ -1,0 +1,28 @@
+{
+  "name": "eSHTEMARAN",
+  "short_name": "eSHTEMARAN",
+  "description": "eSHTEMARAN - Armenian Learning Platform",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f0f1a",
+  "theme_color": "#6c63ff",
+  "lang": "hy",
+  "icons": [
+    {
+      "src": "/assets/favicon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["education"],
+  "prefer_related_applications": false
+}

@@ -2,9 +2,25 @@
 <html lang="hy">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/assets/favicon.png?v=4" /> 
+    <link rel="icon" type="image/png" href="/assets/favicon.png?v=4" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>eSHTEMARAN</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Theme color for Android browser bar -->
+    <meta name="theme-color" content="#6c63ff" />
+
+    <!-- Apple PWA support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="eSHTEMARAN" />
+    <link rel="apple-touch-icon" href="/assets/logo.png" />
+
+    <!-- SEO -->
+    <meta name="description" content="eSHTEMARAN - Armenian Learning Platform" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Armenian:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -12,5 +28,20 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Register Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function (reg) {
+              console.log('Service Worker registered:', reg.scope);
+            })
+            .catch(function (err) {
+              console.log('Service Worker registration failed:', err);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
