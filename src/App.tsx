@@ -15,6 +15,9 @@ import ClassroomDetailPage from './pages/ClassroomDetailPage'
 import AdminLoginPage from './pages/AdminLoginPage'
 import AdminPanelPage from './pages/AdminPanelPage'
 
+// 🚀 PWA ավտոմատ թարմացումների ծանուցման բաղադրիչը
+import { ReloadPrompt } from './ReloadPrompt'
+
 // Նոր դիզայնով QuizPage էջը
 import QuizPage from './pages/QuizPage'
 
@@ -27,13 +30,16 @@ export default function App() {
 
   return (
     <MobileLayoutProvider>
+      {/* 🚀 PWA ծանուցում՝ նոր թարմացումների դեպքում */}
+      <ReloadPrompt />
+
       <AnimatePresence mode="wait" initial={false}>
         <Routes location={location} key={location.pathname}>
           {/* 🏁 Հանրային էջեր */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
-             
+              
           {/* 🧭 Սա կբռնի թե՛ /quiz/3/2, թե՛ /quiz-run/3/2 ուղիները */}
           <Route path="/quiz/:shtemId/:sectionNum" element={<RequireClassAccess><QuizPage /></RequireClassAccess>} />
           <Route path="/quiz-run/:shtemId/:sectionNum" element={<RequireClassAccess><QuizPage /></RequireClassAccess>} />
