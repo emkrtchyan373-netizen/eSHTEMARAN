@@ -9,8 +9,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'prompt',
       injectRegister: 'auto',
+      selfDestroying: true,
       devOptions: {
-        enabled: false
+        enabled: true
       }
     })
   ]

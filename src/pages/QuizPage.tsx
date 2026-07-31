@@ -218,7 +218,6 @@ export default function QuizPage() {
     switch (numericSection) {
       case 2:
       case 4:
-      case 5: // 🎯 ՈՒՂՂՎԱԾ Է. Section 5-ը տանում ենք MultiBlankView-ով
         return (
           <MultiBlankView 
             key={`mb-${currentIndex}`} 
@@ -229,8 +228,40 @@ export default function QuizPage() {
             isLast={isLastQuestion}
           />
         )
+      case 5: {
+        if (currentQuestion.subQuestions) {
+          // Shtemaran 1 Section 5: MultiBlank format (passage + subQuestions)
+          return (
+            <MultiBlankView 
+              key={`mb-${currentIndex}`} 
+              data={currentQuestion} 
+              correctAnswersObj={finalAnswersObj}
+              onAnswer={handleAnswerSelect}
+              onNext={handleNext}
+              isLast={isLastQuestion}
+            />
+          )
+        }
+        // Shtemaran 2 & 3 Section 5: SingleChoice format (q + opts, numeric answer index)
+        let correctAnsIndex5 = 0
+        if (typeof finalAnswersObj === 'number') {
+          correctAnsIndex5 = finalAnswersObj
+        } else if (typeof finalAnswersObj === 'string') {
+          correctAnsIndex5 = ['a', 'b', 'c', 'd', 'e'].indexOf(finalAnswersObj.toLowerCase())
+        }
+        return (
+          <SingleChoiceView 
+            key={`sc-${currentIndex}`}
+            data={currentQuestion} 
+            correctAnswerIndex={correctAnsIndex5 === -1 ? 0 : correctAnsIndex5} 
+            onAnswer={handleAnswerSelect}
+            onNext={handleNext}
+            isLast={isLastQuestion}
+          />
+        )
+      }
       case 1:
-      case 3:
+      case 3: {
         let correctAnsIndex = 0
         if (typeof finalAnswersObj === 'number') {
           correctAnsIndex = finalAnswersObj
@@ -247,6 +278,7 @@ export default function QuizPage() {
             isLast={isLastQuestion}
           />
         )
+      }
       case 6:
       case 8:
       case 10:
@@ -331,35 +363,34 @@ export default function QuizPage() {
             onSliderChange={handleSliderChange}
           />
           
-          <div className="quiz-page__content">
+          <div className="quiz-page__content" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {renderQuestionTemplate()}
+            
+            <button
+              onClick={handleSaveProgress}
+              style={{
+                alignSelf: 'flex-start',
+                padding: '12px 30px',
+                backgroundColor: '#34a853',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}
+            >
+              Save Progress
+            </button>
           </div>
           
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '20px' }}>
             <QuizFooter 
               onNext={handleNext} 
               onBack={handleBack}
               isFirst={currentIndex === 0}
               isLast={isLastQuestion}
             />
-            
-            <button
-              onClick={handleSaveProgress}
-              style={{
-                padding: '10px 24px',
-                backgroundColor: '#34a853',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '6px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                fontSize: '14px',
-                height: '42px',
-                marginTop: '12px'
-              }}
-            >
-              Save
-            </button>
           </div>
         </main>
       </div>
