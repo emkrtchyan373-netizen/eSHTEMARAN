@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import { ArrowLeftIcon, ArrowRightIcon } from '../components/Icons'
 import PageTransition from '../components/PageTransition'
+import DownloadInstructions from '../components/DownloadInstructions'
+import '../components/DownloadInstructions.css'
 import './LandingPage.css'
 
 const books = [
@@ -38,9 +40,21 @@ export default function LandingPage() {
             <p className="hero__subtitle armenian">
               eSHTEMARANY-ը համակարգ է որը կօգնի պատրաստվել միասնական քննություններին ավելի արագ և արդյունավետ
             </p>
-            <Link to="/signup" className="hero__cta">
-              ՍԿՍԵԼ
-            </Link>
+            <div className="hero__actions">
+              <Link to="/signup" className="hero__cta">
+                ՍԿՍԵԼ
+              </Link>
+              <a 
+                href="#download-section" 
+                className="hero__cta hero__cta--secondary"
+                onClick={(e) => {
+                  e.preventDefault()
+                  document.getElementById('download-section')?.scrollIntoView({ behavior: 'smooth' })
+                }}
+              >
+                Ներբեռնել հավելվածը
+              </a>
+            </div>
           </div>
 
           <div className="hero__illustration">
@@ -95,6 +109,21 @@ export default function LandingPage() {
               <span className="carousel__counter-line" />
               <span className="carousel__counter-total">03</span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Ներբեռնման բաժին */}
+      <section id="download-section" className="landing-download-section">
+        <div className="container">
+          <div className="landing-download__header">
+            <h2 className="landing-download__title">Ներբեռնել հավելվածը</h2>
+            <p className="landing-download__subtitle">
+              Ստացեք eSHTEMARAN-ը ձեր բջջային հեռախոսում՝ ավելի հարմարավետ օգտագործման համար:
+            </p>
+          </div>
+          <div className="landing-download__card">
+            <DownloadInstructions />
           </div>
         </div>
       </section>

@@ -75,7 +75,26 @@
   font-weight: 600;
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-btn);
-  transition: opacity 0.2s;
+  transition: all 0.3s ease;
+}
+
+.hero__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hero__cta--secondary {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.hero__cta--secondary:hover {
+  background: rgba(85, 107, 243, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(85, 107, 243, 0.1);
 }
 
 .hero__cta:hover {
@@ -264,5 +283,54 @@
 
   .hero__illustration img {
     margin: 0 auto;
+  }
+}
+
+/* -------------------------------------
+   DOWNLOAD SECTION ON LANDING PAGE
+-------------------------------------- */
+.landing-download-section {
+  padding: 80px 0;
+  background: var(--bg-main);
+  border-top: 1px solid var(--border);
+}
+
+.landing-download__header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.landing-download__title {
+  font-family: 'GHEAGrpalat', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 16px;
+}
+
+.landing-download__subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.landing-download__card {
+  background: white;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .hero__actions {
+    justify-content: center;
+  }
+  .landing-download__title {
+    font-size: 2rem;
+  }
+  .landing-download__card {
+    padding: 16px;
   }
 }
