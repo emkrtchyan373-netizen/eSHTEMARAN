@@ -1,11 +1,11 @@
 import { type ReactNode } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
-import { GridIcon, MedalIcon, ClockIcon, GearIcon, UsersIcon, LogoutIcon, LockIcon } from './Icons'
+import { GridIcon, MedalIcon, ClockIcon, GearIcon, UsersIcon, LogoutIcon, LockIcon, DownloadIcon } from './Icons'
 import { useClassAccess } from '../hooks/useClassAccess'
 import './Sidebar.css'
 
-type ActiveItem = 'shtemaran-1' | 'shtemaran-2' | 'shtemaran-3' | 'progress' | 'tests' | 'classrooms' | 'settings'
+type ActiveItem = 'shtemaran-1' | 'shtemaran-2' | 'shtemaran-3' | 'progress' | 'tests' | 'classrooms' | 'settings' | 'download'
 
 interface SidebarProps {
   active: ActiveItem
@@ -50,6 +50,7 @@ export default function Sidebar({ active, isOpen = false, isTeacher = false, onN
       icon: <UsersIcon />
     },
     { id: 'settings', label: 'Կարգավորումներ', to: '/dashboard/settings', icon: <GearIcon /> },
+    { id: 'download', label: 'Ներբեռնել', to: '/dashboard/download', icon: <DownloadIcon /> },
   ]
 
   return (

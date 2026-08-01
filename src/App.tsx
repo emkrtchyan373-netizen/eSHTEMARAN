@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
 import SettingsPage from './pages/SettingsPage'
+import DownloadPage from './pages/DownloadPage'
 import ProgressPage from './pages/ProgressPage'
 import ShtemaranPage from './pages/ShtemaranPage'
 import TestsPage from './pages/TestsPage'
@@ -60,6 +61,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <SettingsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/download" 
+            element={
+              <ProtectedRoute>
+                <DownloadPage />
               </ProtectedRoute>
             } 
           />
