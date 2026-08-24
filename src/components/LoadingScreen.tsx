@@ -19,6 +19,12 @@ export default function LoadingScreen({ isVisible, onFinished }: LoadingScreenPr
     const video = videoRef.current
     if (!video) return
 
+    // Safety fallback: always dismiss loading screen after 3.5 seconds max
+    const safetyTimeout = setTimeout(() => {
+      console.log('Loading screen safety timeout triggered.');
+      onFinished?.();
+    }, 3500);
+
     if (isVisible) {
       video.currentTime = 0
       video.play().catch(() => {
@@ -28,9 +34,15 @@ export default function LoadingScreen({ isVisible, onFinished }: LoadingScreenPr
       })
     }
 
-    const handleEnded = () => onFinished?.()
+    const handleEnded = () => {
+      clearTimeout(safetyTimeout);
+      onFinished?.();
+    }
     video.addEventListener('ended', handleEnded)
-    return () => video.removeEventListener('ended', handleEnded)
+    return () => {
+      clearTimeout(safetyTimeout);
+      video.removeEventListener('ended', handleEnded)
+    }
   }, [isVisible, onFinished])
 
   return (
