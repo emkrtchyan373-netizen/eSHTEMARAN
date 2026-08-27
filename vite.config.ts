@@ -11,7 +11,7 @@ export default defineConfig({
       injectRegister: 'auto',
       selfDestroying: true,
       devOptions: {
-        enabled: true
+        enabled: false
       }
     })
   ],

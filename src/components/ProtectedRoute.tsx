@@ -11,6 +11,17 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     // Ստուգում ենք՝ արդյոք օգտատերը ներկայումս մուտք գործած է
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession()
+      
+      // Եթե URL-ում կա OAuth-ի հեշ կամ կոդ, սպասում ենք onAuthStateChange-ին
+      const hasOAuthHash = window.location.hash.includes('access_token') || 
+                           window.location.hash.includes('error') || 
+                           window.location.search.includes('code=');
+
+      if (!session && hasOAuthHash) {
+        // Թույլ ենք տալիս onAuthStateChange-ին կարգավորել սեսիան
+        return
+      }
+
       setIsAuthenticated(!!session)
 
       if (session?.user?.user_metadata?.role === 'teacher') {
